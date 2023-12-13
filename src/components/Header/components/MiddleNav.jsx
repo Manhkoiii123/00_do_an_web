@@ -21,12 +21,13 @@ import {
 import { formatCurrency, generateNameId } from "../../../utils/utils";
 import noproduct from "../../../assets/images/no-product.png";
 import { doGetCartListItemAction } from "../../../redux/cart/cartSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { callDeleteFromCart, callGetCart } from "../../../services/cartApi";
 
 const MiddleNav = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
+
   useEffect(() => {
     const fetch = async () => {
       const res = await callGetCart();
@@ -35,11 +36,15 @@ const MiddleNav = () => {
       }
     };
     fetch();
-  }, [cart]);
+  }, []);
 
   const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
   const wishList = useSelector((state) => state.product.wishList);
+  const [avatar, setAvatar] = useState();
   const profile = useSelector((state) => state.account.profile);
+  useEffect(() => {
+    setAvatar(profile.avatar);
+  }, [profile]);
   const handleDeleteWishlist = async (id) => {
     const res = await callDeleteWishlist(id);
     if (res.data.code === 200) {
@@ -284,8 +289,8 @@ const MiddleNav = () => {
               >
                 <div className="cursor-pointer">
                   <Badge size={"default"}>
-                    {profile?.avatar ? (
-                      <Avatar size={46} src={profile.avatar} />
+                    {avatar ? (
+                      <Avatar size={46} src={avatar} />
                     ) : (
                       <UserIcon></UserIcon>
                     )}

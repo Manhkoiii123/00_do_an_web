@@ -1,4 +1,5 @@
 /* eslint-disable no-useless-escape */
+import UserImage from "../../src/assets/images/user.svg";
 export function formatCurrency(currency) {
   return new Intl.NumberFormat("de-DE").format(currency);
 }
@@ -31,3 +32,8 @@ export const price_before_discount = (num, price_after) => {
 export function rateSale(original, sale) {
   return Math.round(((original - sale) / original) * 100) + "%";
 }
+export const getAvatarUrl = (avtarName) => {
+  return avtarName
+    ? `https://res.cloudinary.com/debcojldf/image/upload/v1702457308/${avtarName}`
+    : UserImage;
+};

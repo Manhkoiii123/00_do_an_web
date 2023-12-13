@@ -2,64 +2,77 @@
 import { Table } from "antd";
 import { Link } from "react-router-dom";
 import ModalRating from "./ModalRating";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlusIcon } from "../../utils/icons";
-
+import { callOrderHistory } from "../../services/cartApi";
+import moment from "moment";
+import ReactJson from "react-json-view";
 const OrderHistory = () => {
-  const [showModalRating, setShowModalRating] = useState(false);
+  const [orderHistory, setOrderHistory] = useState([]);
+
+  const fetchOrderHistory = async () => {
+    const res = await callOrderHistory();
+    if (res.status === 200) {
+      setOrderHistory(res.data.historyPurchase.reverse());
+    }
+  };
+  useEffect(() => {
+    fetchOrderHistory();
+  }, []);
+  
   //
-  const dataSource = [
-    {
-      key: "1",
-      name: "Mike",
-      age: 32,
-      address: "10 Downing Street",
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-    },
-  ];
+  const dataSource = orderHistory;
 
   const columns = [
     {
-      title: "Order Id",
-      dataIndex: "orderId",
-      key: "id",
+      title: "Tóm tắt đơn hàng",
+      width: "30%",
+      render: (text, record, index) => {
+        return (
+          <ReactJson
+            src={record.products}
+            collapsed={true}
+            name="Tóm tắt đơn mua"
+          />
+        );
+      },
     },
     {
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "statusOrder",
       key: "status",
     },
     {
       title: "Date",
-      dataIndex: "date",
+      dataIndex: "createAt",
       key: "date",
+      render: (text, record, index) => {
+        return <span>{moment(record).format("DD-MM-YYYY")}</span>;
+      },
+    },
+    {
+      title: "Payment Method",
+      dataIndex: "paymentMethod",
+      key: "paymentMethod",
     },
     {
       title: "Total",
-      dataIndex: "total",
-      key: "date",
+      render: (text, record, index) => {
+        const total = record.products.reduce((res, current) => {
+          return res + current.totalPrice;
+        }, 0);
+        return <span>{total}</span>;
+      },
     },
     {
       title: "Action",
-      className: "w-[300px]",
       render: (text, record, index) => {
         return (
           <div className="flex items-center justify-between gap-1">
             <Link to={`${record.id}`}>Detail</Link>
-            <div
-              onClick={() => setShowModalRating(true)}
-              className="flex items-center gap-2 p-2 border rounded-md cursor-pointer border-primary"
-            >
-              <span className="text-sm font-semibold text-primary">
-                Leave a Rating
-              </span>
-              <PlusIcon></PlusIcon>
-            </div>
+            {/* {record.statusOrder === 3 && (
+              
+            )} */}
           </div>
         );
       },
@@ -72,12 +85,9 @@ const OrderHistory = () => {
         Order history
       </span>
       <div className="mt-10">
-        <Table dataSource={dataSource} columns={columns} />
+        <Table dataSource={dataSource} columns={columns} pagination={false} />
       </div>
-      <ModalRating
-        showModalRating={showModalRating}
-        setShowModalRating={setShowModalRating}
-      />
+      
     </div>
   );
 };

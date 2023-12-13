@@ -10,7 +10,7 @@ import {
 } from "../../utils/utils";
 import DOMPurify from "dompurify";
 import QuantityController from "../input/QuantityController";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   callAddToWishList,
   callGetProductDetail,
@@ -20,7 +20,10 @@ import { useDispatch } from "react-redux";
 import { doGetWishListAction } from "../../redux/product/productSlice";
 import { message } from "antd";
 import { callAddToCart, callGetCart } from "../../services/cartApi";
-import { doGetCartListItemAction } from "../../redux/cart/cartSlice";
+import {
+  doBuyNowAction,
+  doGetCartListItemAction,
+} from "../../redux/cart/cartSlice";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -120,7 +123,24 @@ const ProductDetail = () => {
       message.success("Thêm vào giỏ hàng thành công");
     }
   };
-
+  const nav = useNavigate();
+  const buyNow = async (id, title, number) => {
+    const data = {
+      id,
+      childTitle: title,
+      quantity: number,
+    };
+    const res = await callAddToCart(data);
+    if (res.data.code === 200) {
+      const res2 = await callGetCart();
+      if (res2.status === 200) {
+        dispatch(doGetCartListItemAction(res2.data.cart.products));
+      }
+      // message.success("Thêm vào giỏ hàng thành công");
+      nav("/shoppingcart");
+      dispatch(doBuyNowAction(id));
+    }
+  };
   return (
     <div className="py-6 bg-gray-200">
       <div className="container">
@@ -369,13 +389,13 @@ const ProductDetail = () => {
                   </div>
                 </button>
                 <button
-                  // onClick={() =>
-                  //   buyNow(
-                  //     dataProduct._id,
-                  //     selectProduct?.childTitle || "none",
-                  //     buyCount
-                  //   )
-                  // }
+                  onClick={() =>
+                    buyNow(
+                      dataProduct._id,
+                      selectProduct?.childTitle || "none",
+                      buyCount
+                    )
+                  }
                   className=" flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-primary px-5 capitalize text-white shadow-sm outline-none hover:bg-primary/90"
                 >
                   Mua Ngay

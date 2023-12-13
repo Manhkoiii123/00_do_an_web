@@ -6,10 +6,11 @@ import CountDown from "./CountDown";
 import { LargeProduct, Product } from "../product";
 
 const BestDeals = ({ productsBestSellers }) => {
-  const result = productsBestSellers.map((product, index) => {
+  // console.log(productsBestSellers.slice(1, 9));
+  const result = productsBestSellers.slice(1, 9).map((product, index) => {
     return (
-      <div className="w-(calc(25%-10px)) h-(calc(50%-4px))" key={index}>
-        <Product star product={product} />
+      <div key={index} className="w-[calc(25%-8px)] h-[1/2 - 16px]">
+        <Product product={product} star />
       </div>
     );
   });
@@ -66,9 +67,9 @@ const BestDeals = ({ productsBestSellers }) => {
       </div>
       <div className="grid grid-cols-5 max-h-[500px] gap-2 mt-4">
         <div className="col-span-1">
-          <LargeProduct></LargeProduct>
+          <LargeProduct product={productsBestSellers[0]}></LargeProduct>
         </div>
-        <div className="flex flex-wrap justify-between col-span-4 gap-2">
+        <div className="flex flex-wrap justify-between w-full col-span-4 gap-2">
           {result}
         </div>
       </div>

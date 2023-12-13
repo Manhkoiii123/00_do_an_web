@@ -34,7 +34,6 @@ export const productSlice = createSlice({
       );
     },
     doDeleteCompare: (state, action) => {
-      console.log(action);
       state.compareProduct = state.compareProduct.filter(
         (item) =>
           item.id !== action.payload.id || item.token !== action.payload.token
@@ -45,7 +44,8 @@ export const productSlice = createSlice({
       );
     },
     doGetCompareProduct: (state) => {
-      state.compareProduct = JSON.parse(localStorage.getItem("compareProduct"));
+      state.compareProduct =
+        JSON.parse(localStorage.getItem("compareProduct")) || [];
     },
   },
 });

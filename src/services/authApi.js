@@ -31,5 +31,8 @@ export const callUpdateAvatar = (fileImg) => {
     method: "patch",
     url: "/account/uploadImage",
     data: bodyFormData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
 };

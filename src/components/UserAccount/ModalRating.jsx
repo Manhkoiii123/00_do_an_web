@@ -4,15 +4,30 @@ import { useForm } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
 import Button from "../Button";
+import { callCreateFeedbacks } from "../../services/productApi";
 
-const ModalRating = ({ showModalRating, setShowModalRating }) => {
+const ModalRating = ({
+  showModalRating,
+  setShowModalRating,
+  dataProduct,
+  orderId,
+}) => {
   const desc = ["terrible", "bad", "normal", "good", "wonderful"];
+  console.log(dataProduct);
   const [form] = useForm();
-  const onFinish = (values) => {
-    console.log(values);
+  const onFinish = async (values) => {
+    const data = {
+      productId: dataProduct.product_id,
+      childTitle: dataProduct.childTitle,
+      orderId: orderId,
+      comment: values.feedback,
+      rate: value,
+    };
+    const res = await callCreateFeedbacks(data);
   };
   const [value, setValue] = useState(3);
   const [valueFeedback, setValueFeedback] = useState("");
+
   return (
     <Modal
       title="Rating"
@@ -37,8 +52,7 @@ const ModalRating = ({ showModalRating, setShowModalRating }) => {
             autoSize={{ minRows: 3, maxRows: 5 }}
           />
         </Form.Item>
-        <Form.Item
-        >
+        <Form.Item>
           <Button
             kind="primary"
             onClick={() => form.submit()}

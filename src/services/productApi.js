@@ -21,9 +21,8 @@ export const callDeleteWishlist = (id) => {
 };
 export const callProductInfo = (data) => {
   return instance.post("/products/compare", data);
-  // return instance({
-  //   method: "get",
-  //   url: "/products/compare",
-  //   data:(data),
-  // });
+};
+
+export const callCreateFeedbacks = (data) => {
+  return instance.post("/feedbacks/create", data);
 };

@@ -23,6 +23,9 @@ export const accountSlice = createSlice({
     doGetUserInfo: (state, action) => {
       state.profile = action.payload;
     },
+    doUpdateUserInfo: (state, action) => {
+      state.profile = action.payload;
+    },
   },
 });
 
@@ -32,6 +35,7 @@ export const {
   doLogoutAction,
   doGetProfileUser,
   doGetUserInfo,
+  doUpdateUserInfo,
 } = accountSlice.actions;
 
 export default accountSlice.reducer;

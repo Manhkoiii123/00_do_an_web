@@ -20,7 +20,8 @@ import ModalViewDetail from "../../pages/admin/products/ModalViewDetail";
 
 const Product = ({ star, product }) => {
   const token = useSelector((state) => state.account.token);
-  const compareProduct = useSelector((state) => state.product.compareProduct);
+  const compareProduct =
+    useSelector((state) => state.product.compareProduct) || [];
   const handleAddToCompare = (id, token) => {
     const check = compareProduct.some((item) => {
       return token === item.token && item.id === id;
@@ -88,7 +89,7 @@ const Product = ({ star, product }) => {
             }
             alt=""
             // w-[180px]
-            className="object-cover w-full  h-[140px]"
+            className="object-cover w-full h-[140px]"
           />
         </div>
         <div

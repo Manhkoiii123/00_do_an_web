@@ -9,7 +9,9 @@ const CheckoutSuccess = () => {
         title="Đặt hàng thành công !"
         subTitle="Bạn đã đặt hàng thành công. Cảm ơn bạn đã tin tưởng "
         extra={[
-          <Button key="console">Go To Order History</Button>,
+          <Link to="/orderhistory" key="orderhistory">
+            <Button>Go To Order History</Button>
+          </Link>,
           <Link to="/" key="home">
             <Button>Home</Button>,
           </Link>,

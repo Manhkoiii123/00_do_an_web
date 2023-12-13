@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { UploadOutlined, UserOutlined } from "@ant-design/icons";
 import {
@@ -14,19 +15,20 @@ import {
 } from "antd";
 import { useForm } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   callCheckOldPassword,
   callUpdateAvatar,
   callUpdatePassword,
   callUpdateUser,
 } from "../../services/authApi";
+import InputFile from "../input/InputFile";
+import { doUpdateUserInfo } from "../../redux/account/accountSlice";
 
 const Profile = () => {
   const profile = useSelector((state) => state.account.profile);
-  const [form] = useForm();
-  const [form2] = useForm();
+
   const init = {
     email: profile.email,
     fullName: profile.fullName,
@@ -36,15 +38,32 @@ const Profile = () => {
   useEffect(() => {
     form.setFieldsValue(init);
   }, [profile]);
+
+  const [avatar, setAvatar] = useState();
+  const handleChangeFile = async (file) => {
+    const res = await callUpdateAvatar(file);
+    if (res.data.code === 200) {
+      setAvatar(res.data.avatar);
+    }
+    setFile(file);
+  };
+  const [form] = useForm();
+  const [form2] = useForm();
+
+  const dispatch = useDispatch();
   const updateInfoUser = async (values) => {
     const data = {
       email: values.email,
       phone: values.phone,
       fullName: values.fullName,
       address: values.address,
+      avatar: avatar,
     };
     const res = await callUpdateUser(data);
     if (res.data.code === 200) {
+      console.log(res.data.user);
+      localStorage.setItem("profile", JSON.stringify(res.data.user));
+      dispatch(doUpdateUserInfo(res.data.user));
       message.success("Update thông tin thành công");
     }
   };
@@ -68,27 +87,12 @@ const Profile = () => {
       });
     }
   };
-  const handleUploadAvatar = async ({ file }) => {
-    const res = await callUpdateAvatar(file.name);
-    console.log(res);
-  };
-  const propsUpload = {
-    name: "file",
-    headers: {
-      authorization: "authorization-text",
-    },
-    customRequest: handleUploadAvatar,
-    onChange(info) {
-      if (info.file.status !== "uploading") {
-        // console.log(info.file, info.fileList);
-      }
-      if (info.file.status === "done") {
-        message.success(` file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(` file upload failed.`);
-      }
-    },
-  };
+
+  const [file, setFile] = useState();
+  const previewImage = useMemo(() => {
+    return file ? URL.createObjectURL(file) : "";
+  }, [file]);
+
   const items = [
     {
       key: "1",
@@ -105,10 +109,15 @@ const Profile = () => {
                 gap: "10px",
               }}
             >
-              <Avatar size={100} icon={<UserOutlined />} src={profile.avatar} />
-              <Upload {...propsUpload}>
-                <Button icon={<UploadOutlined />}>Upload avatar</Button>
-              </Upload>
+              <div className="w-24 h-24 my-5">
+                <img
+                  src={previewImage || profile.avatar}
+                  alt="avatar"
+                  className="object-cover w-full h-full border border-gray-300 rounded-full"
+                />
+              </div>
+
+              <InputFile onChange={handleChangeFile}></InputFile>
             </div>
           </Col>
           <Col span={12}>

@@ -73,6 +73,23 @@ export const cartSlice = createSlice({
       state.cart = newCart;
       localStorage.setItem("extendProduct", JSON.stringify(newCart));
     },
+    doBuyNowAction: (state, action) => {
+      const id = action.payload;
+      const newCart = state.cart.map((item) => {
+        if (item.product_id === id) {
+          return {
+            ...item,
+            selected: true,
+          };
+        } else {
+          return {
+            ...item,
+          };
+        }
+      });
+      state.cart = newCart;
+      localStorage.setItem("extendProduct", JSON.stringify(newCart));
+    },
   },
 });
 
@@ -81,6 +98,7 @@ export const {
   doUpdateQuantityAction,
   doUpdateSelectAction,
   doUpdateSelectAll,
+  doBuyNowAction,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

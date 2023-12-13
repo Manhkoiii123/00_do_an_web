@@ -20,3 +20,15 @@ export const callCheckout = (data) => {
 export const callCheckOutSuccess = (data) => {
   return instance.post("/checkout/success", data);
 };
+export const callOrderHistory = () => {
+  return instance.get("/historyPurchase");
+};
+export const callDetailOrder = (id) => {
+  return instance.get(`/historyPurchase/detail/${id}`);
+};
+export const callCancelOrder = (id) => {
+  return instance.patch(`/historyPurchase/cancel/${id}`);
+};
+export const callUpdateOrder = (id, data) => {
+  return instance.patch(`/admin/orders/edit/${id}`, data);
+};
