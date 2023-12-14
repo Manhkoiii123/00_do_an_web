@@ -6,8 +6,12 @@ import {
   PayPalButtons,
   usePayPalScriptReducer,
 } from "@paypal/react-paypal-js";
-import { useEffect } from "react";
-import { callCheckOutSuccess, callGetCart } from "../../services/cartApi";
+import { useEffect, useState } from "react";
+import {
+  callCheckOutSuccess,
+  callGetCart,
+  callUpdateOrder,
+} from "../../services/cartApi";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { doGetCartListItemAction } from "../../redux/cart/cartSlice";
@@ -23,6 +27,7 @@ const ButtonWrapper = ({ currency, showSpinner, amount, payload }) => {
       nav("/checkoutsuccess");
     }
   };
+
   useEffect(() => {
     dispatch({
       type: "resetOptions",
@@ -52,8 +57,6 @@ const ButtonWrapper = ({ currency, showSpinner, amount, payload }) => {
         //khi nhấn nút tt xong lưu chi tiết đơn hàng vào db
         onApprove={(data, actions) =>
           actions.order.capture().then(async (response) => {
-            // console.log(response);
-            console.log(payload);
             if (response.status === "COMPLETED") {
               handleSaveOrder();
             }

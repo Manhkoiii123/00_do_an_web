@@ -1,8 +1,18 @@
 /* eslint-disable no-unused-vars */
 import { Link, useLocation, useParams } from "react-router-dom";
 import { ArrowLeftIcon, PlusIcon } from "../../utils/icons";
-import { Button, Col, Popconfirm, Row, Steps, Table, message } from "antd";
-import { useEffect, useState } from "react";
+import {
+  Button,
+  Col,
+  Descriptions,
+  Divider,
+  Popconfirm,
+  Row,
+  Steps,
+  Table,
+  message,
+} from "antd";
+import { useEffect, useMemo, useState } from "react";
 import ModalRating from "./ModalRating";
 import {
   callCancelOrder,
@@ -69,7 +79,7 @@ const OrderDetail = () => {
       if (currentStep <= 3) {
         changeStatus();
       }
-    }, 20000);
+    }, 10000);
     return () => {
       clearTimeout(id);
     };
@@ -124,7 +134,7 @@ const OrderDetail = () => {
                 setDataProduct(record);
                 setShowModalRating(true);
               }}
-              className="flex items-center w-fit gap-2 p-2 border rounded-md cursor-pointer border-primary"
+              className="flex items-center gap-2 p-2 border rounded-md cursor-pointer w-fit border-primary"
             >
               <span className="text-sm font-semibold text-primary">
                 Leave a Rating
@@ -144,10 +154,43 @@ const OrderDetail = () => {
       message.success("Huỷ Đơn Hàng Thành Công");
     }
   };
+
+  const itemUser = [
+    {
+      key: "1",
+      label: "Họ và tên",
+      span: 3,
+      children: dataDetail?.userInfo?.fullName,
+    },
+    {
+      key: "2",
+      label: "Số điện thoại",
+      span: 3,
+      children: dataDetail?.userInfo?.phone,
+    },
+    {
+      key: "3",
+      label: "Địa chỉ nhận hàng",
+      span: 3,
+      children: dataDetail?.userInfo?.address,
+    },
+  ];
+  const total = useMemo(() => {
+    return dataDetail?.products?.reduce((res, curr) => {
+      return res + curr.totalPrice;
+    }, 0);
+  }, [dataDetail?.products]);
+  const discount = useMemo(() => {
+    return total * (dataDetail?.discountDetail?.discountPercent / 100);
+  }, [dataDetail?.discountDetail?.discountPercent, total]);
   if (!id) return null;
   return (
     <>
-      <div className="container p-5 my-12 border border-gray-200">
+      <div
+        className={`container p-4 border border-gray-100 ${
+          isAdmin ? "my-0" : "my-12"
+        }`}
+      >
         <div className="flex items-center justify-between ">
           <Link to={to} className="flex items-center gap-2 ">
             <ArrowLeftIcon></ArrowLeftIcon>
@@ -169,12 +212,7 @@ const OrderDetail = () => {
           </div>
           <div>
             <span className="text-[#2DA5F3] text-[28px] font-semibold leading-8">
-              {formatCurrency(
-                dataDetail?.products.reduce((res, current) => {
-                  return res + current.totalPrice;
-                }, 0)
-              )}
-              đ
+              {formatCurrency(total - discount)}đ
             </span>
           </div>
         </div>
@@ -227,10 +265,8 @@ const OrderDetail = () => {
               <span className="text-base font-normal leading-6 text-gray-900">
                 Thông tin giao hàng
               </span>
-              <span>Tran duc manh</span>
-              <span>Tran duc manh</span>
-              <span>Tran duc manh</span>
-              <span>Tran duc manh</span>
+              <Divider></Divider>
+              <Descriptions layout="horizontal" items={itemUser} />
             </Col>
 
             <Col
@@ -244,10 +280,40 @@ const OrderDetail = () => {
               <span className="text-base font-normal leading-6 text-gray-900">
                 Hóa đơn thanh toán
               </span>
-              <span>Tran duc manh</span>
-              <span>Tran duc manh</span>
-              <span>Tran duc manh</span>
-              <span>Tran duc manh</span>
+              <div className="p-5 bg-white rounded-lg">
+                <div className="flex flex-col gap-3 py-5">
+                  <div className="flex justify-start gap-10 ">
+                    <span className="text-sm font-normal text-gray-600">
+                      Sub-total
+                    </span>
+                    <span className="text-sm font-medium leading-5">
+                      {formatCurrency(total)}đ
+                    </span>
+                  </div>
+                  <div className="flex justify-start gap-10 ">
+                    <span className="text-sm font-normal text-gray-600">
+                      Discount
+                    </span>
+                    <span className="text-sm font-medium leading-5">
+                      {formatCurrency(discount)}đ
+                    </span>
+                  </div>
+                  <div className="flex justify-start gap-10 ">
+                    <span className="text-sm font-normal text-gray-600">
+                      Shipping
+                    </span>
+                    <span className="text-sm font-medium leading-5">Free</span>
+                  </div>
+                  <Divider></Divider>
+                  <div className="flex justify-start gap-10 text-base leading-6 text-gray-900">
+                    <span className="font-normal ">Total</span>
+                    <span className="font-semibold">
+                      {formatCurrency(total - discount)}đ
+                    </span>
+                  </div>
+                </div>
+                <Divider></Divider>
+              </div>
             </Col>
           </Row>
         </div>

@@ -5,8 +5,9 @@ import TextArea from "antd/es/input/TextArea";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { formatCurrency } from "../../utils/utils";
-import { callCheckout } from "../../services/cartApi";
+import { callCheckOutSuccess, callCheckout } from "../../services/cartApi";
 import Paypal from "../paypal/Paypal";
+import { useNavigate } from "react-router-dom";
 
 const CheckOut = () => {
   const [dataShipping, setDataShipping] = useState({});
@@ -88,6 +89,7 @@ const CheckOut = () => {
       setListDiscount(coupon);
     }
   };
+
   useEffect(() => {
     const infoProducts = buyProduct.map((item) => {
       return {
@@ -126,6 +128,24 @@ const CheckOut = () => {
     setValuePayment(value);
     const tmp = listPayment.find((item) => item.id === value);
     setPaymentMethod(tmp.method);
+  };
+
+  //tiền mặt;
+  const nav = useNavigate();
+  const handleSaveOrder = async () => {
+    const data = {
+      fullName: dataShipping?.fullName,
+      phone: dataShipping?.phone,
+      address: dataShipping.address,
+      discountId: discountId,
+      products: listProduct,
+      paymentMethod: paymentMethod,
+    };
+    // console.log(data);
+    const res = await callCheckOutSuccess(data);
+    if (res.data.code === 200) {
+      nav("/checkoutsuccess");
+    }
   };
   return (
     <div className="container my-12">
@@ -308,12 +328,6 @@ const CheckOut = () => {
                 </div>
               </div>
               <Divider></Divider>
-              {/* <div>
-                <Radio.Group onChange={onChangePayment} value={valuePayment}>
-                  <Radio value={1}>Thanh toán khi nhận hàng</Radio>
-                  <Radio value={2}>Thanh toán bằng Paypal</Radio>
-                </Radio.Group>
-              </div> */}
               <Select
                 onChange={handleChangePayment}
                 style={{
@@ -346,7 +360,12 @@ const CheckOut = () => {
                 </div>
               )}
               {valuePayment === 1 && (
-                <Button className="w-full mt-5">Đặt hàng</Button>
+                <Button
+                  onClick={() => handleSaveOrder()}
+                  className="w-full mt-5"
+                >
+                  Đặt hàng
+                </Button>
               )}
             </div>
           </div>

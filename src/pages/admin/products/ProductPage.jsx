@@ -108,7 +108,7 @@ const ProductPage = () => {
         </Button>
       </div>
       <Table dataSource={dataSource} columns={columns} />
-      <ModalViewDetail
+      {/* <ModalViewDetail
         dataDetail={dataDetail}
         setDataDetail={setDataDetail}
         isOpenDetail={isOpenDetail}
@@ -117,7 +117,7 @@ const ProductPage = () => {
       <ModalAddProduct
         isOpenAddNewProduct={isOpenAddNewProduct}
         setIsOpenAddNewProduct={setIsOpenAddNewProduct}
-      />
+      /> */}
     </div>
   );
 };

@@ -14,16 +14,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   callAddToWishList,
   callGetProductDetail,
+  callGetProducts,
   callGetWishlist,
 } from "../../services/productApi";
 import { useDispatch } from "react-redux";
 import { doGetWishListAction } from "../../redux/product/productSlice";
-import { message } from "antd";
+import { Divider, message } from "antd";
 import { callAddToCart, callGetCart } from "../../services/cartApi";
 import {
   doBuyNowAction,
   doGetCartListItemAction,
 } from "../../redux/cart/cartSlice";
+import Product from "./Product";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -31,10 +33,13 @@ const ProductDetail = () => {
   const [selectProduct, setSelectProduct] = useState(null);
   const [dataProduct, setDataProduct] = useState({});
   const idProduct = getIdFromNameId(id);
+  const [feedBack, setFeedBack] = useState([]);
   const fetchDetail = async () => {
     const res = await callGetProductDetail(idProduct);
+
     if (res.data.code === 200) {
       setDataProduct(res.data.newProduct);
+      setFeedBack(res.data.newFeedbacks);
     }
   };
   useEffect(() => {
@@ -45,6 +50,7 @@ const ProductDetail = () => {
       setSelectProduct(dataProduct.newGroup[0]);
     }
   }, [dataProduct]);
+  // console.log(feedBack);
   // const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
   const [currentIndexImages, setCurrentIndexImages] = useState([0, 0]);
   const [activeImage, setActiveImage] = useState("");
@@ -136,11 +142,31 @@ const ProductDetail = () => {
       if (res2.status === 200) {
         dispatch(doGetCartListItemAction(res2.data.cart.products));
       }
-      // message.success("Thêm vào giỏ hàng thành công");
       nav("/shoppingcart");
       dispatch(doBuyNowAction(id));
     }
   };
+
+  const [rateFilter, setRateFilter] = useState(0);
+  const handleSelectRateComment = (value) => {
+    setRateFilter(value);
+  };
+
+  //sản phẩm liên quan
+  const [productRelated, setProductRelated] = useState([]);
+  const sanPhamLienQuan = async () => {
+    const res = await callGetProducts(
+      `page=1&limit=4&categoryParent=${dataProduct?.productCategoryId}`
+    );
+    if (res.status === 200) {
+      setProductRelated(res.data.products);
+    }
+  };
+
+  useEffect(() => {
+    sanPhamLienQuan();
+  }, []);
+  console.log(dataProduct?.productCategoryId);
   return (
     <div className="py-6 bg-gray-200">
       <div className="container">
@@ -448,13 +474,98 @@ const ProductDetail = () => {
       </div>
       <div className="container mt-8">
         <div className="p-4 mt-8 bg-white shadow ">
-          <div className="text-gray-400 uppercase">Đánh giá</div>
+          <div className="p-4 text-lg capitalize rounded bg-gray-50 text-slate-700">
+            Đánh Giá Sản Phẩm
+          </div>
+
+          <div className="p-5 bg-primary bg-opacity-10">
+            <div className="flex items-center justify-between gap-10 text-primary">
+              <div className="flex flex-col">
+                <div className="flex items-end gap-2">
+                  <span className="text-2xl">{dataProduct.rate}</span>
+                  <span>trên</span>
+                  <span className="text-xl">5</span>
+                  <span>({feedBack.length} đánh giá) </span>
+                </div>
+
+                <div>
+                  <ProductRating
+                    rating={dataProduct.rate}
+                    activeClassname="fill-primary text-primary h-4 w-4"
+                    nonActiveClassname="fill-current text-gray-300 h-4 w-4"
+                  ></ProductRating>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div
+                  onClick={() => handleSelectRateComment(0)}
+                  className={`px-5 py-2 border cursor-pointer border-primary ${
+                    0 === rateFilter ? "border-black text-black" : ""
+                  }`}
+                >
+                  Tất cả
+                </div>
+                {Array(5)
+                  .fill(0)
+                  .map((item, index) => (
+                    <div
+                      onClick={() => handleSelectRateComment(index + 1)}
+                      className={`px-5 py-2 border cursor-pointer border-primary ${
+                        index + 1 === rateFilter
+                          ? "border-black text-black"
+                          : ""
+                      }`}
+                      key={index}
+                    >
+                      {index + 1} Sao
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col p-4">
+            {feedBack &&
+              feedBack.length > 0 &&
+              feedBack.map((item, index) => {
+                if (item.rate >= rateFilter) {
+                  return (
+                    <>
+                      <div key={index} className="flex flex-col gap-2">
+                        <div className="flex flex-col">
+                          <span>{item.fullName}</span>
+                          <div className="flex items-center gap-3 text-sm text-gray-300">
+                            <span>12/14/2023</span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <ProductRating rating={item.rate}></ProductRating>
+                          <span>{item.comment}</span>
+                        </div>
+                      </div>
+                      <Divider></Divider>
+                    </>
+                  );
+                }
+              })}
+            {feedBack && feedBack.length === 0 && (
+              <div>
+                <span>Chưa có đánh giá nào</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="container">
         <div className="p-4 mt-8 bg-white shadow ">
-          <div className="text-gray-400 uppercase mb-[-20px]">
-            Có thể bạn cũng thích
+          <div className="text-gray-400 uppercase ">Có thể bạn cũng thích</div>
+          <div className="flex flex-wrap justify-start gap-2 py-5">
+            {productRelated &&
+              productRelated.map((product, index) => (
+                <div key={index} className="w-[calc(20%-8px)] h-[305px]">
+                  <Product product={product} star />
+                </div>
+              ))}
+            {!productRelated && <div>Không có sản phẩn nào</div>}
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Form, Modal, Rate, Space } from "antd";
+import { Form, Modal, Rate, Space, message } from "antd";
 import { useForm } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
@@ -13,7 +13,6 @@ const ModalRating = ({
   orderId,
 }) => {
   const desc = ["terrible", "bad", "normal", "good", "wonderful"];
-  console.log(dataProduct);
   const [form] = useForm();
   const onFinish = async (values) => {
     const data = {
@@ -24,6 +23,13 @@ const ModalRating = ({
       rate: value,
     };
     const res = await callCreateFeedbacks(data);
+    if (res.data.code === 200) {
+      message.success("Đánh giá thành công");
+    }
+    if (res.data.code === 400) {
+      message.error(res.data.message);
+    }
+    setShowModalRating(false);
   };
   const [value, setValue] = useState(3);
   const [valueFeedback, setValueFeedback] = useState("");
