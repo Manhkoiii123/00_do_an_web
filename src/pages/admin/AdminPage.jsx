@@ -11,6 +11,7 @@ const AdminPage = () => {
   if (path === "admin") {
     path = "";
   }
+
   const navbarAdmin = [
     {
       path: "",
@@ -35,6 +36,10 @@ const AdminPage = () => {
     {
       path: "chat",
       label: "Chat",
+    },
+    {
+      path: "role",
+      label: "Role",
     },
   ];
   return (

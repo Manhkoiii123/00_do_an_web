@@ -18,6 +18,9 @@ import { doGetWishListAction } from "../../../redux/product/productSlice";
 import { useDispatch } from "react-redux";
 import { callAddToCart, callGetCart } from "../../../services/cartApi";
 import { doGetCartListItemAction } from "../../../redux/cart/cartSlice";
+import { useLocation } from "react-router-dom";
+import DOMPurify from "dompurify";
+import { data } from "autoprefixer";
 
 const ModalViewDetail = ({
   dataDetail,
@@ -25,22 +28,27 @@ const ModalViewDetail = ({
   isOpenDetail,
   setIsOpenDetail,
 }) => {
+  const location = useLocation();
+  const pathname = location.pathname;
+  const isAdmin = pathname.includes("admin") ? true : false;
+  const to = isAdmin ? "/admin/order" : "/orderhistory";
   const [selectIndex, setSelectIndex] = useState(0);
   const [selectProduct, setSelectProduct] = useState(null);
   const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
   const [activeImage, setActiveImage] = useState("");
   useEffect(() => {
-    if (dataDetail.newGroup) {
-      setSelectProduct(dataDetail.newGroup[0]);
+    if (dataDetail?.newGroup) {
+      setSelectProduct(dataDetail?.newGroup[0]);
     }
   }, [dataDetail]);
   const currentImages = useMemo(
-    () => (dataDetail ? dataDetail.images : []),
-    [dataDetail]
+    () => (dataDetail ? dataDetail?.images?.slice(...currentIndexImages) : []),
+    [dataDetail, currentIndexImages]
   );
+
   useEffect(() => {
-    if (dataDetail && dataDetail.images?.length > 0) {
-      setActiveImage(dataDetail.images[0]);
+    if (dataDetail && dataDetail?.images?.length > 0) {
+      setActiveImage(dataDetail?.images[0]);
     }
   }, [dataDetail]);
   const chooseActive = (img) => {
@@ -104,6 +112,7 @@ const ModalViewDetail = ({
     }
   };
   return (
+    // <></>
     <Modal
       width="70vw"
       title="Thông tin sản phẩm"
@@ -147,25 +156,25 @@ const ModalViewDetail = ({
                   />
                 </svg>
               </button>
-              {/* {currentImages.map((img, index) => {
-                  const isActive = img === activeImage;
-                  return (
-                    <div
-                      className="relative w-full pt-[100%] "
-                      key={index}
-                      onMouseEnter={() => chooseActive(img)}
-                    >
-                      <img
-                        src={img}
-                        alt={dataDetail.name}
-                        className="absolute top-0 left-0 object-cover w-[full] h-[full] bg-white cursor-pointer"
-                      />
-                      {isActive && (
-                        <div className="absolute inset-0 border-2 border-red-500"></div>
-                      )}
-                    </div>
-                  );
-                })} */}
+              {currentImages.map((img, index) => {
+                const isActive = img === activeImage;
+                return (
+                  <div
+                    className="relative w-full pt-[100%] "
+                    key={index}
+                    onMouseEnter={() => chooseActive(img)}
+                  >
+                    <img
+                      src={img}
+                      alt={dataDetail.name}
+                      className="absolute top-0 left-0 object-cover w-[full] h-[full] bg-white cursor-pointer"
+                    />
+                    {isActive && (
+                      <div className="absolute inset-0 border-2 border-red-500"></div>
+                    )}
+                  </div>
+                );
+              })}
               <button
                 onClick={next}
                 className="absolute right-0 z-10 w-5 text-white -translate-y-1/2 bg-black top-1/2 h-9 opacity-20"
@@ -189,15 +198,15 @@ const ModalViewDetail = ({
           </div>
           <div className="col-span-7">
             <h1 className="text-xl font-medium uppercase">
-              {/* {dataDetail.title} */}
+              {dataDetail?.title}
             </h1>
             <div className="flex items-center mt-8">
               <div className="flex items-center">
                 <span className="mr-1 border-b border-b-primary text-primary">
-                  {/* {dataDetail.rate} */}
+                  {dataDetail?.rate}
                 </span>
                 <ProductRating
-                  // rating={dataDetail.rate}
+                  rating={dataDetail?.rate}
                   activeClassname="fill-primary text-primary h-4 w-4"
                   nonActiveClassname="fill-current text-gray-300 h-4 w-4"
                 ></ProductRating>
@@ -215,7 +224,7 @@ const ModalViewDetail = ({
               ) : (
                 <>
                   <div>
-                    {/* <span>{formatNumberToSocialStyle(dataDetail.buyed)}</span> */}
+                    <span>{formatNumberToSocialStyle(dataDetail?.buyed)}</span>
                     <span className="ml-1 text-gray-500">Đã bán</span>
                   </div>
                 </>
@@ -239,13 +248,13 @@ const ModalViewDetail = ({
               <>
                 <div className="flex items-center px-5 py-4 mt-8 bg-gray-50">
                   <div className="text-gray-500 line-through">
-                    {/* đ{formatCurrency(dataDetail.price)} */}
+                    đ{formatCurrency(dataDetail?.price)}
                   </div>
                   <div className="ml-3 text-3xl font-medium text-primary">
-                    {/* {formatCurrency(dataDetail.priceNew)} */}
+                    {formatCurrency(dataDetail?.priceNew)}
                   </div>
                   <div className="ml-4 rounded-sm bg-primary px-1 py-[2px] text-xs font-semibold uppercase text-white ">
-                    {/* {dataDetail.discountPercent}% giảm */}
+                    {dataDetail?.discountPercent}% giảm
                   </div>
                 </div>
               </>
@@ -253,16 +262,18 @@ const ModalViewDetail = ({
             {selectProduct ? (
               <div className="flex items-center mt-8">
                 <div className="mr-5 text-gray-500 capitalize">Số Lượng</div>
-                <QuantityController
-                  onDecrease={handleBuyCount}
-                  onIncrease={handleBuyCount}
-                  onType={handleBuyCount}
-                  value={buyCount}
-                  // max={selectProduct.stock}
-                ></QuantityController>
+                {!isAdmin && (
+                  <QuantityController
+                    onDecrease={handleBuyCount}
+                    onIncrease={handleBuyCount}
+                    onType={handleBuyCount}
+                    value={buyCount}
+                    max={selectProduct?.stock}
+                  ></QuantityController>
+                )}
 
                 <div className="ml-6 text-sm text-gray-500">
-                  {selectProduct.stock} Sản phẩm có sẵn
+                  {selectProduct?.stock} Sản phẩm có sẵn
                 </div>
               </div>
             ) : (
@@ -274,11 +285,11 @@ const ModalViewDetail = ({
                     onIncrease={handleBuyCount}
                     onType={handleBuyCount}
                     value={buyCount}
-                    // max={dataDetail.stock}
+                    max={dataDetail?.stock}
                   ></QuantityController>
 
                   <div className="ml-6 text-sm text-gray-500">
-                    {/* {dataDetail.stock} Sản phẩm có sẵn */}
+                    {dataDetail?.stock} Sản phẩm có sẵn
                   </div>
                 </div>
               </>
@@ -315,51 +326,68 @@ const ModalViewDetail = ({
                 </div>
               </div>
             )}
-
-            <div className="flex items-center gap-4 mt-8">
-              <button
-                onClick={() => handleAddToWishList(dataDetail._id)}
-                className="ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-primary px-5 capitalize text-white shadow-sm outline-none hover:bg-primary/90"
-              >
-                Yêu thích
-              </button>
-              <button
-                onClick={() =>
-                  handleAddToCart(
-                    dataDetail._id,
-                    selectProduct?.childTitle || "none",
-                    buyCount
-                  )
-                }
-                className="h-12 px-5 border rounded-sm shadow-sm bg-primary/10 border-primary hover:bg-primary/5"
-              >
-                <div className="flex items-center justify-center text-primary ">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-5 h-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                    />
-                  </svg>
-                  <span className="ml-2"> Thêm vào giỏ hàng</span>
-                </div>
-              </button>
-              <button
-                //   onClick={buyNow}
-                className=" flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-primary px-5 capitalize text-white shadow-sm outline-none hover:bg-primary/90"
-              >
-                Mua Ngay
-              </button>
-            </div>
+            {!isAdmin && (
+              <div className="flex items-center gap-4 mt-8">
+                <button
+                  onClick={() => handleAddToWishList(dataDetail._id)}
+                  className="ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-primary px-5 capitalize text-white shadow-sm outline-none hover:bg-primary/90"
+                >
+                  Yêu thích
+                </button>
+                <button
+                  onClick={() =>
+                    handleAddToCart(
+                      dataDetail._id,
+                      selectProduct?.childTitle || "none",
+                      buyCount
+                    )
+                  }
+                  className="h-12 px-5 border rounded-sm shadow-sm bg-primary/10 border-primary hover:bg-primary/5"
+                >
+                  <div className="flex items-center justify-center text-primary ">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                      />
+                    </svg>
+                    <span className="ml-2"> Thêm vào giỏ hàng</span>
+                  </div>
+                </button>
+                <button
+                  //   onClick={buyNow}
+                  className=" flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-primary px-5 capitalize text-white shadow-sm outline-none hover:bg-primary/90"
+                >
+                  Mua Ngay
+                </button>
+              </div>
+            )}
           </div>
         </div>
+        {isAdmin && (
+          <div className="container">
+            <div className="p-4 mt-8 bg-white shadow">
+              <div className="p-4 text-lg capitalize rounded bg-gray-50 text-slate-700">
+                Mô tả sản phẩm
+              </div>
+              <div className="mx-4 mt-6 mb-4 text-sm leading-loose">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(dataDetail?.description),
+                  }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Modal>
   );

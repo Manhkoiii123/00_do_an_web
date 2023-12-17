@@ -50,17 +50,13 @@ const ProductDetail = () => {
       setSelectProduct(dataProduct.newGroup[0]);
     }
   }, [dataProduct]);
-  // console.log(feedBack);
-  // const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
-  const [currentIndexImages, setCurrentIndexImages] = useState([0, 0]);
+  const [currentIndexImages, setCurrentIndexImages] = useState([0, 5]);
   const [activeImage, setActiveImage] = useState("");
-  // const currentImages = useMemo(
-  //   () => (dataProduct ? dataProduct.images.slice(...currentIndexImages) : []),
-  //   [currentIndexImages, dataProduct]
-  // );
+
   const currentImages = useMemo(
-    () => (dataProduct ? dataProduct.images : []),
-    [dataProduct]
+    () =>
+      dataProduct ? dataProduct?.images?.slice(...currentIndexImages) : [],
+    [dataProduct, currentIndexImages]
   );
   useEffect(() => {
     if (dataProduct && dataProduct.images?.length > 0) {
@@ -166,7 +162,6 @@ const ProductDetail = () => {
   useEffect(() => {
     sanPhamLienQuan();
   }, []);
-  console.log(dataProduct?.productCategoryId);
   return (
     <div className="py-6 bg-gray-200">
       <div className="container">
@@ -206,7 +201,7 @@ const ProductDetail = () => {
                     />
                   </svg>
                 </button>
-                {/* {currentImages.map((img, index) => {
+                {currentImages?.map((img, index) => {
                   const isActive = img === activeImage;
                   return (
                     <div
@@ -224,7 +219,7 @@ const ProductDetail = () => {
                       )}
                     </div>
                   );
-                })} */}
+                })}
                 <button
                   onClick={next}
                   className="absolute right-0 z-10 w-5 text-white -translate-y-1/2 bg-black top-1/2 h-9 opacity-20"

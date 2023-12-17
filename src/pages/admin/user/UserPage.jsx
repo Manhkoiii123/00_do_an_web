@@ -1,55 +1,105 @@
 /* eslint-disable no-unused-vars */
-import { ShoppingCartOutlined } from "@ant-design/icons";
-import { Button, Popconfirm, Table } from "antd";
+import { EditFilled, ShoppingCartOutlined } from "@ant-design/icons";
+import { Button, Popconfirm, Table, message } from "antd";
 import { MdDelete } from "react-icons/md";
+import {
+  callDeleteAccount,
+  callGetAllAccount,
+} from "../../../services/adminApi";
+import { useEffect, useState } from "react";
+import ModalUserDetail from "./ModalUserDetail";
+import UpdateUser from "./UpdateUser";
 
 const UserPage = () => {
-  const dataSource = [
-    {
-      key: "1",
-      name: "Mike",
-      age: 32,
-      address: "10 Downing Street",
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street",
-    },
-  ];
+  const [dataDetail, setDataDetail] = useState({});
+  const [openViewDetail, setOpenViewDetail] = useState(false);
+  const [openCreateUser, setOpenCreateUser] = useState(false);
+  const [listAccount, setListAccount] = useState([]);
+  const fetchAccount = async () => {
+    const res = await callGetAllAccount();
+    if (res.data.code === 400) {
+      message.error(res.data.message);
+    }
+    if (res.data.listAccount) {
+      setListAccount(res.data.listAccount);
+    }
+  };
+  useEffect(() => {
+    fetchAccount();
+  }, []);
+
+  const dataSource = listAccount;
+
+  const handleDeleteAccount = async (id) => {
+    const res = await callDeleteAccount(id);
+    if (res.data.code === 200) {
+      message.success("Xóa người dùng thành công");
+      const res2 = await callGetAllAccount();
+      if (res2.data.listAccount) {
+        setListAccount(res2.data.listAccount);
+      }
+    } else {
+      message.error(res.data.message);
+    }
+  };
 
   const columns = [
     {
       title: "Id",
-      dataIndex: "_id",
+      width: "15px",
       render: (text, record, index) => {
         return (
           <a
             onClick={() => {
-              //   setDataDetail(record);
-              //   setOpenViewDetail(true);
+              setDataDetail(record);
+              setOpenViewDetail(true);
             }}
+            title={record.id}
           >
-            {/* {record._id} */}a
+            {record.id.slice(0, 5)}...
           </a>
         );
       },
     },
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: "Họ và tên",
+      render: (text, record, index) => {
+        return <span>{record.fullName}</span>;
+      },
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phone",
+      key: "phone",
     },
     {
       title: "Address",
       dataIndex: "address",
       key: "address",
+    },
+    {
+      title: "Rank",
+      dataIndex: "rank",
+      key: "rank",
+    },
+    {
+      title: "Role",
+      key: "role",
+      render: (text, record, index) => {
+        return <span>{record.role.title}</span>;
+      },
+    },
+    {
+      title: "Trạng thái",
+      key: "status",
+      render: (text, record, index) => {
+        return <span>{record.status}</span>;
+      },
     },
     {
       title: "Action",
@@ -63,7 +113,7 @@ const UserPage = () => {
               okText="Xác nhận"
               cancelText="Hủy"
               okButtonProps={{ type: "default" }}
-              //   onConfirm={() => handleDeleteBook(record._id)}
+              onConfirm={() => handleDeleteAccount(record.id)}
             >
               <Button>
                 <MdDelete color="red"></MdDelete>
@@ -76,8 +126,12 @@ const UserPage = () => {
                 alignItems: "center",
                 justifyContent: "center",
               }}
+              onClick={() => {
+                setDataDetail(record);
+                setOpenCreateUser(true);
+              }}
             >
-              <ShoppingCartOutlined />
+              <EditFilled />
             </Button>
           </div>
         );
@@ -88,9 +142,20 @@ const UserPage = () => {
     <div className="p-4 border border-gray-200 rounded-lg">
       <div className="flex items-center justify-between mb-10">
         <span className="uppercase">User</span>
-        <Button>Add New User</Button>
       </div>
       <Table dataSource={dataSource} columns={columns} />
+      <ModalUserDetail
+        openViewDetail={openViewDetail}
+        dataDetail={dataDetail}
+        setOpenViewDetail={setOpenViewDetail}
+      ></ModalUserDetail>
+      <UpdateUser
+        fetchAccount={fetchAccount}
+        setDataDetail={setDataDetail}
+        dataDetail={dataDetail}
+        openCreateUser={openCreateUser}
+        setOpenCreateUser={setOpenCreateUser}
+      ></UpdateUser>
     </div>
   );
 };

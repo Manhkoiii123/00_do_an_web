@@ -27,21 +27,28 @@ import { callDeleteFromCart, callGetCart } from "../../../services/cartApi";
 const MiddleNav = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
-
+  const token = useSelector((state) => state.account.token);
+  const profile = useSelector((state) => state.account.profile);
+  const role = profile.role?.title;
+  const fetch = async () => {
+    const res = await callGetCart();
+    if (res.data.cart.products) {
+      dispatch(doGetCartListItemAction(res.data.cart.products));
+    }
+  };
   useEffect(() => {
-    const fetch = async () => {
-      const res = await callGetCart();
-      if (res.status === 200) {
-        dispatch(doGetCartListItemAction(res.data.cart.products));
-      }
-    };
     fetch();
-  }, []);
+  }, [token]);
+  const [info, setInfo] = useState({});
+  const infoWeb = useSelector((state) => state.product.infoWeb);
+  useEffect(() => {
+    setInfo(infoWeb);
+  }, [infoWeb]);
 
   const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
   const wishList = useSelector((state) => state.product.wishList);
   const [avatar, setAvatar] = useState();
-  const profile = useSelector((state) => state.account.profile);
+
   useEffect(() => {
     setAvatar(profile.avatar);
   }, [profile]);
@@ -77,7 +84,6 @@ const MiddleNav = () => {
           <div className="w-[328px] flex flex-col gap-4">
             {cart &&
               cart.slice(0, 3).map((item, index) => {
-                // console.log(item.infoProduct);
                 return (
                   <div className="flex justify-between gap-4" key={index}>
                     <Link
@@ -93,7 +99,9 @@ const MiddleNav = () => {
                         alt=""
                       />
                       <div className="flex flex-col justify-between">
-                        <span>{item.infoProduct.title}</span>
+                        <span className="line-clamp-2">
+                          {item.infoProduct.title}
+                        </span>
                         {item.childTitle !== "none" && (
                           <span>{item?.childTitle || ""}</span>
                         )}
@@ -166,7 +174,7 @@ const MiddleNav = () => {
                         alt=""
                       />
                       <div className="flex flex-col justify-between">
-                        <span>{item.title}</span>
+                        <span className="line-clamp-2">{item.title}</span>
                         <div className="flex items-center gap-1">
                           <span className="text-[#2DA5F3]">
                             {formatCurrency(item.minPrice)} VND
@@ -216,6 +224,12 @@ const MiddleNav = () => {
   const contentUserList = () => {
     return (
       <div className="flex flex-col gap-2">
+        {role !== "Khách hàng" && (
+          <Link className="px-2" to="/admin">
+            Dashboard
+          </Link>
+        )}
+
         <Link className="px-2" to="/orderhistory">
           Order History
         </Link>
@@ -245,7 +259,7 @@ const MiddleNav = () => {
     <div className="w-full border bg-back border-t-[#ccc] py-[20px] ">
       <div className="container flex items-center justify-between">
         <Link to="/">
-          <img src="/Logo.png" alt="" />
+          <img src={info?.logo} alt="" className="w-[127px] h-[48px] pb-2" />
         </Link>
         <div className="flex items-center justify-between px-3 py-2 bg-white rounded-md">
           <input

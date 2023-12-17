@@ -5,6 +5,7 @@ import moment from "moment/moment";
 
 const CategoryDetail = (props) => {
   const { dataDetail, openDetail, setOpenDetail } = props;
+
   return (
     <Drawer
       title={`Thông tin chi tiết category = ${dataDetail?.title}`}
@@ -33,7 +34,7 @@ const CategoryDetail = (props) => {
         <Descriptions.Item label="Mô tả">
           {dataDetail?.description}
         </Descriptions.Item>
-        <Descriptions.Item label="Role" span={2}>
+        <Descriptions.Item label="Status" span={2}>
           <Badge status="processing" text={dataDetail?.status}></Badge>
         </Descriptions.Item>
         <Descriptions.Item label="Created at">
@@ -41,6 +42,9 @@ const CategoryDetail = (props) => {
         </Descriptions.Item>
         <Descriptions.Item label="Update at">
           {moment(dataDetail?.updatedAt).format("DD-MM-YYYY HH:mm:ss")}
+        </Descriptions.Item>
+        <Descriptions.Item label="Created By">
+          {dataDetail?.createdBy?.accountName}
         </Descriptions.Item>
       </Descriptions>
     </Drawer>

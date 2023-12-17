@@ -5,6 +5,7 @@ const initialState = {
   productFromWishlist: [],
   categoryParent: [],
   compareProduct: [],
+  infoWeb: {},
 };
 
 export const productSlice = createSlice({
@@ -47,6 +48,9 @@ export const productSlice = createSlice({
       state.compareProduct =
         JSON.parse(localStorage.getItem("compareProduct")) || [];
     },
+    doUpdateInfoWeb: (state, action) => {
+      state.infoWeb = action.payload;
+    },
   },
 });
 
@@ -57,6 +61,7 @@ export const {
   doLogoutWishlist,
   doAddToCompare,
   doGetCompareProduct,
+  doUpdateInfoWeb,
   doDeleteCompare,
 } = productSlice.actions;
 

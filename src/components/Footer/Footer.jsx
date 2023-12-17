@@ -10,8 +10,15 @@ import {
 } from "../../utils/icons";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Footer = () => {
+  const [info, setInfo] = useState({});
+  const infoWeb = useSelector((state) => state.product.infoWeb);
+  useEffect(() => {
+    setInfo(infoWeb);
+  }, [infoWeb]);
   return (
     <>
       <div className="bg-[#1B6392]">
@@ -50,7 +57,7 @@ const Footer = () => {
             >
               <Link to="/">
                 <img
-                  src="/Logo.png"
+                  src={info?.logo}
                   alt=""
                   className="w-[127px] h-[48px] pb-2"
                 />
@@ -60,14 +67,14 @@ const Footer = () => {
                   Customer Supports :{" "}
                 </span>
                 <span className="text-lg font-medium text-white">
-                  (629) 555-0129
+                  {info?.phone}
                 </span>
               </div>
               <span className="text-base font-normal text-gray-300">
-                4517 Washington Ave. Manchester, Kentucky 39495
+                {info?.address}
               </span>
               <span className="text-base font-normal text-white">
-                info@kinbo.com
+                {info?.email}
               </span>
             </Col>
             <Col

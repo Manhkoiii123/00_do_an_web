@@ -17,11 +17,12 @@ import AddProductChild from "./AddProductChild";
 import TableAddProduct from "./TableAddProduct";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { v4 as uuidv4 } from "uuid";
 import {
-  callAddProduct,
   callAdminCategoryDetail,
   callAllCategory,
   callUpdataImageProduct,
+  callUpdateProduct,
 } from "../../../services/adminApi";
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -30,11 +31,13 @@ const getBase64 = (file) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
   });
-const ModalAddProduct = ({
-  isOpenAddNewProduct,
-  setIsOpenAddNewProduct,
+const ModalUpdateProduct = ({
+  dataDetail,
+  openModalUpdate,
+  setOpenModalUpdate,
   fetchProduct,
 }) => {
+  //   console.log(dataDetail);
   const [dataTableChild, setDataTableChild] = useState([]);
   const [previewOpenSlider, setPreviewOpenSlider] = useState(false);
   const [previewImageSlider, setPreviewImageSlider] = useState("");
@@ -67,7 +70,7 @@ const ModalAddProduct = ({
   );
 
   const [dataSlider, setDataSlider] = useState([]);
-  //file nafy laf thu vien cho
+
   const handleUploadFileSlider = async ({ file, onSuccess, onError }) => {
     const res = await callUpdataImageProduct(file);
     if (res && res.data.code === 200) {
@@ -120,7 +123,11 @@ const ModalAddProduct = ({
 
   const [form] = useForm();
   const [formAddChild] = useForm();
-  const [categorySelect, setCategorySelect] = useState("");
+  const [categorySelect, setCategorySelect] = useState();
+  console.log(dataDetail);
+  useEffect(() => {
+    setCategorySelect(dataDetail?.productCategoryId);
+  }, [dataDetail?.productCategoryId]);
   //select category
   const onChangeSelectCategory = (e) => {
     setCategorySelect(e[e?.length - 1]);
@@ -130,12 +137,16 @@ const ModalAddProduct = ({
     const fetchPropertyCategory = async () => {
       const res = await callAdminCategoryDetail(categorySelect);
       if (res.data.code === 200) {
-        setPropretiesCategory(res.data?.productCategory?.properties);
+        const tmp = res.data?.productCategory?.properties?.map((item) => {
+          return {
+            [item]: "",
+          };
+        });
+        setPropretiesCategory(tmp);
       }
     };
     fetchPropertyCategory();
   }, [categorySelect]);
-
   //change status
   const [valueStatus, setValueStatus] = useState("");
   const onChangeStatus = (e) => {
@@ -145,29 +156,99 @@ const ModalAddProduct = ({
   const onChangeFeature = (e) => {
     setValueFeature(e.target.value);
   };
+
+  //lấy lại dữ liệu cũ
+  const [initForm, setInitForm] = useState({});
+
+  useEffect(() => {
+    if (dataDetail?._id) {
+      const arrImages = dataDetail?.images?.map((item) => {
+        return {
+          uid: uuidv4(),
+          name: item,
+          status: "done",
+          url: item,
+        };
+      });
+      const init = {
+        images: { fileList: arrImages },
+        title: dataDetail?.title,
+        description: dataDetail?.description,
+        category: dataDetail?.productCategoryTitle,
+        discountPercent: dataDetail?.discountPercent,
+        status: dataDetail?.status,
+        feature: dataDetail?.featured,
+      };
+      setInitForm(init);
+      setValueQuill(init.description);
+      setPropretiesCategory(dataDetail?.properties);
+      setDataSlider(arrImages);
+      setValueFeature(dataDetail?.featured);
+      setValueStatus(dataDetail?.status);
+      //   setDataTableChild(dataDetail?.newGroup);
+      form.setFieldsValue(init);
+    }
+    return () => {
+      form.resetFields();
+    };
+  }, [
+    dataDetail?._id,
+    dataDetail?.description,
+    dataDetail?.discountPercent,
+    dataDetail?.featured,
+    dataDetail?.images,
+    dataDetail?.newGroup,
+    dataDetail?.productCategoryTitle,
+    dataDetail?.properties,
+    dataDetail?.status,
+    dataDetail?.title,
+    form,
+  ]);
+  const [oldChildProduct, setOldChildProduct] = useState([]);
+  useEffect(() => {
+    const tmp = dataDetail?.newGroup?.map((item) => {
+      return Object.fromEntries(Object.entries(item).slice(0, -1));
+    });
+    setOldChildProduct(tmp);
+  }, [dataDetail?.newGroup]);
   const onFinish = async (values) => {
     const images = dataSlider.map((i) => i.name);
+
+    const newArr = oldChildProduct?.map((item, index) => {
+      //   console.log(item);
+      const key = Object.keys(item);
+      const tmp = key.map((item2, index2) => {
+        return {
+          [item2]: values[`${index}${index2}`] || item[item2],
+        };
+      });
+      let resultObject = Object.assign({}, ...tmp);
+      return resultObject;
+    });
+
     const data = {
       title: values.title,
       productCategoryId: categorySelect,
       description: valueQuill,
       images: images,
       discountPercent: values.discountPercent,
-      group: dataTableChild,
+      group: [...newArr, ...dataTableChild],
       featured: valueFeature,
       status: valueStatus,
       properties: propertiesCategory.map((item) => {
+        const key = Object.keys(item)[0];
         return {
-          [item]: values[item],
+          [key]: values[key] || item[key],
         };
       }),
     };
     // console.log(data);
-    const res = await callAddProduct(data);
-    if (res.data.code === 200) {
-      message.success("Thêm sản phẩm thành công");
+    const res = await callUpdateProduct(dataDetail?._id, data);
+
+    if (res.data.newProduct) {
+      message.success("Update sản phẩm thành công");
       fetchProduct();
-      setIsOpenAddNewProduct(false);
+      setOpenModalUpdate(false);
       setDataTableChild([]);
       setProductChildren();
       setCategorySelect("");
@@ -186,11 +267,11 @@ const ModalAddProduct = ({
   return (
     <Modal
       width="70vw"
-      title="Add New Product"
-      open={isOpenAddNewProduct}
+      title="Update Product"
+      open={openModalUpdate}
       maskClosable={false}
       onCancel={() => {
-        setIsOpenAddNewProduct(false);
+        setOpenModalUpdate(false);
         setDataTableChild([]);
         setProductChildren();
         setCategorySelect("");
@@ -202,15 +283,19 @@ const ModalAddProduct = ({
       footer={<></>}
     >
       <Form name="basic" form={form} onFinish={onFinish} autoComplete="off">
-        <Form.Item labelCol={{ span: 24 }} label="Hình ảnh sản phẩm :">
+        <Form.Item
+          name={`images`}
+          labelCol={{ span: 24 }}
+          label="Hình ảnh sản phẩm :"
+        >
           <div className="my-4">
             <Upload
               customRequest={handleUploadFileSlider}
               listType="picture-card"
-              fileList={fileListSlider}
               onPreview={handlePreviewSlider}
               onChange={handleChangeSlider}
               onRemove={(file) => handleRemoveFile(file, "slider")}
+              defaultFileList={initForm?.images?.fileList ?? []}
             >
               {fileListSlider.length >= 8 ? null : uploadButtonSlider}
             </Upload>
@@ -267,19 +352,19 @@ const ModalAddProduct = ({
 
         {propertiesCategory.length > 0 &&
           propertiesCategory.map((item, index) => {
+            const key = Object.keys(item);
             return (
-              <Form.Item key={index} label={item} name={item}>
-                <Input />
+              //   <></>
+              <Form.Item key={index} label={key[0]} name={key[0]}>
+                <Input defaultValue={item[key[0]]} />
               </Form.Item>
             );
           })}
         <Form.Item
           labelCol={{ span: 24 }}
           label="Description"
-          name="decription"
+          name="description"
         >
-          {/*
-           */}
           <ReactQuill
             theme="snow"
             value={valueQuill}
@@ -314,7 +399,45 @@ const ModalAddProduct = ({
             <Radio value={"1"}>Yes</Radio>
           </Radio.Group>
         </Form.Item>
-        <Form.Item label="Phân loại hàng" labelCol={{ span: 24 }}>
+
+        <Form.Item
+          labelCol={{ span: 24 }} //whole column
+          label="Phân loại sản phẩm cũ"
+          name="oldGroup"
+        >
+          {oldChildProduct?.length > 0 &&
+            oldChildProduct?.map((item, index) => {
+              const key = Object.keys(item);
+              return (
+                <div key={index} className="flex gap-4">
+                  {key.map((item2, index2) => {
+                    if (index2 === 0) {
+                      return (
+                        <Form.Item
+                          key={index2}
+                          label={item2}
+                          name={`${index}${index2}`}
+                        >
+                          <Input defaultValue={item[item2]} />
+                        </Form.Item>
+                      );
+                    }
+                    return (
+                      <Form.Item
+                        key={index2}
+                        label={item2}
+                        name={`${index}${index2}`}
+                      >
+                        <InputNumber defaultValue={item[item2]} />
+                      </Form.Item>
+                    );
+                  })}
+                </div>
+              );
+            })}
+        </Form.Item>
+
+        <Form.Item label="Thêm phân loại hàng" labelCol={{ span: 24 }}>
           <AddProductChild
             formAddChild={formAddChild}
             productChildren={productChildren}
@@ -327,11 +450,11 @@ const ModalAddProduct = ({
           productChildren={productChildren}
         ></TableAddProduct>
         <Form.Item className="mt-10">
-          <Button htmlType="submit">Thêm mới</Button>
+          <Button htmlType="submit">Update</Button>
         </Form.Item>
       </Form>
     </Modal>
   );
 };
 
-export default ModalAddProduct;
+export default ModalUpdateProduct;

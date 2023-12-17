@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
   MinusCircleFilled,
@@ -21,20 +22,29 @@ import {
 } from "antd";
 import { useForm } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  callAddCategory,
-  callAllCategory,
   callUpdateImageCategory,
+  callUpdateCategory,
+  callAllCategory,
 } from "../../../services/adminApi";
 
-const CreateCategory = ({
-  openCreateCategory,
-  setOpenCreateCategory,
+const ModalUpdateCate = ({
+  dataDetail,
+  setDataDetail,
+  openUpdateCategory,
+  setOpenUpdateCategory,
   data,
+  idDetail,
+  setIdDetail,
   setData,
 }) => {
-  const [tmpAvatar, setTmpAvatar] = useState("");
+  const [tmpAvatar, setTmpAvatar] = useState(dataDetail?.image);
+  useEffect(() => {
+    if (dataDetail?.image) {
+      setTmpAvatar(dataDetail?.image);
+    }
+  }, [dataDetail?.image]);
   const handleUploadImageCategory = async ({ file }) => {
     const res = await callUpdateImageCategory(file);
     if (res.data.code === 200) {
@@ -46,6 +56,7 @@ const CreateCategory = ({
   };
   const propsUpload = {
     name: "file",
+
     headers: {
       authorization: "authorization-text",
     },
@@ -62,68 +73,99 @@ const CreateCategory = ({
     },
   };
   const [form] = useForm();
-
+  useEffect(() => {
+    const init = {
+      title: dataDetail?.title,
+      status: dataDetail?.status,
+      description: dataDetail?.description,
+    };
+    form.setFieldsValue(init);
+  }, [dataDetail?.description, dataDetail?.status, dataDetail?.title, form]);
   //   onchange switch
-  const [isParent, setIsParent] = useState(false);
+
+  const [isParent, setIsParent] = useState();
+  useEffect(() => {
+    if (!dataDetail?.parentName) {
+      setIsParent(true);
+    } else {
+      setIsParent(false);
+    }
+  }, [dataDetail?.parentName]);
 
   //select cate cha
-
+  const [newParentId, setNewParentId] = useState(dataDetail?.parentId);
+  const handleChangeParentCate = (value) => {
+    //id
+    setNewParentId(value);
+    // console.log(`selected ${value}`);
+  };
   const onFinish = async (values) => {
     const data = {
       title: values.title,
-      parentId: newParentId,
       description: values.description,
-      image: tmpAvatar,
       status: values.status,
+      image: tmpAvatar,
       properties: properties,
+      parentId: newParentId,
     };
-    const res = await callAddCategory(data);
-    if (res.data.code === 200) {
-      message.success("thêm thành công 1 category mới");
+    const res = await callUpdateCategory(idDetail, data);
+    if (res.data.code == 200) {
+      message.success("update thành công");
+      setDataDetail();
+      setIdDetail();
+      setOpenUpdateCategory(false);
       const res = await callAllCategory();
       if (res.status === 200) {
         setData(res.data.productCategory);
       }
-      setOpenCreateCategory(false);
-      form.resetFields();
-      setTmpAvatar("");
+      if (res?.data?.code === 400) {
+        message.error(res?.data?.message);
+      }
     }
+    // console.log(values);
   };
-
-  const handleCheckParent = (e) => {
-    setIsParent(e);
+  const onChangeCheckbox = (checkedValues) => {
+    // console.log("checked = ", checkedValues);
   };
   //new properties
   const [properties, setProperties] = useState([]);
+  useEffect(() => {
+    setProperties(dataDetail?.properties);
+  }, [dataDetail?.properties]);
   const [isNewProperty, setIsNewProperty] = useState(false);
   const [newProperty, setNewProperty] = useState("");
   const handleOnChangeInput = (e) => {
     setNewProperty(e.target.value);
+  };
+  const handleCheckParent = (e) => {
+    setIsParent(e);
   };
   const handleAddNewProperties = () => {
     setProperties((prev) => [...prev, newProperty]);
     setNewProperty("");
   };
   const handleDelete = (value) => {
-    const a = properties.filter((item) => item.value !== value);
+    const a = properties.filter((item) => item !== value);
     setProperties(a);
   };
-  const [newParentId, setNewParentId] = useState("");
-  const handleChangeParentCate = (value) => {
-    setNewParentId(value);
-  };
 
-  const [valueStatus, setValueStatus] = useState();
+  //active
+  const [valueStatus, setValueStatus] = useState(dataDetail?.status);
   const onChangeStatus = (e) => {
     setValueStatus(e.target.value);
   };
+  if (!dataDetail) return null;
+
   return (
     <Modal
       width="30vw"
-      title="Add new category"
-      open={openCreateCategory}
-      onOk={() => setOpenCreateCategory(true)}
-      onCancel={() => setOpenCreateCategory(false)}
+      title="Update category"
+      open={openUpdateCategory}
+      onOk={() => setOpenUpdateCategory(true)}
+      onCancel={() => {
+        setOpenUpdateCategory(false);
+        setDataDetail({});
+      }}
       footer={<></>}
       maskClosable={false}
     >
@@ -133,13 +175,7 @@ const CreateCategory = ({
           <Button icon={<UploadOutlined />}>Upload Image</Button>
         </Upload>
       </div>
-      <Form
-        form={form}
-        name="basic"
-        // style={{ maxWidth: 600, margin: '0 auto' }}
-        onFinish={onFinish}
-        autoComplete="off"
-      >
+      <Form form={form} name="basic" onFinish={onFinish} autoComplete="off">
         <Form.Item
           labelCol={{ span: 24 }} //whole column
           label="Title"
@@ -174,7 +210,7 @@ const CreateCategory = ({
           <Col span={12}>
             <Form.Item name="isparent" label="Parent">
               <Switch
-                defaultChecked={isParent}
+                checked={isParent}
                 onChange={(e) => handleCheckParent(e)}
               />
             </Form.Item>
@@ -183,13 +219,14 @@ const CreateCategory = ({
         {!isParent && (
           <Form.Item
             value="categoryParent"
-            label="Select"
+            label="Select Category Parent"
             labelCol={{ span: 24 }}
           >
             <Select
+              defaultValue={dataDetail?.parentName}
               onChange={handleChangeParentCate}
               style={{ marginBottom: "10px" }}
-              options={data?.map((item) => {
+              options={data.map((item) => {
                 return {
                   value: item.id,
                   label: item.title,
@@ -205,7 +242,7 @@ const CreateCategory = ({
                   flexDirection: "column",
                   gap: "10px",
                 }}
-                // onChange={onChangeCheckbox}
+                onChange={onChangeCheckbox}
               >
                 <Row>
                   {properties?.map((item, index) => (
@@ -238,11 +275,11 @@ const CreateCategory = ({
           </Form.Item>
         )}
         <Form.Item>
-          <Button htmlType="submit">Thêm mới</Button>
+          <Button htmlType="submit">Update</Button>
         </Form.Item>
       </Form>
     </Modal>
   );
 };
 
-export default CreateCategory;
+export default ModalUpdateCate;

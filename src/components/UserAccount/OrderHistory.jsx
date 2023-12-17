@@ -1,20 +1,31 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { Button, Table } from "antd";
+import { Button, Select, Table } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-import { callOrderHistory } from "../../services/cartApi";
+import { callOrderHistory, callUpdateOrder } from "../../services/cartApi";
 import moment from "moment";
 import ReactJson from "react-json-view";
+import { callAdminOrder } from "../../services/adminApi";
+import { useSelector } from "react-redux";
 const OrderHistory = () => {
+  const token = useSelector((state) => state.account.token);
   const [orderHistory, setOrderHistory] = useState([]);
   const location = useLocation();
   const pathname = location.pathname;
   const isAdmin = pathname.includes("admin") ? true : false;
   const to = isAdmin ? "/admin/order" : "/orderhistory";
   const fetchOrderHistory = async () => {
-    const res = await callOrderHistory();
-    if (res.status === 200) {
-      setOrderHistory(res.data.historyPurchase.reverse());
+    if (!isAdmin) {
+      const res = await callOrderHistory();
+      if (res.status === 200) {
+        setOrderHistory(res.data?.historyPurchase?.reverse());
+      }
+    } else {
+      const res = await callAdminOrder();
+      if (res.status === 200) {
+        setOrderHistory(res.data.listOrder);
+      }
     }
   };
   useEffect(() => {
@@ -54,7 +65,23 @@ const OrderHistory = () => {
   ];
   //
   const dataSource = orderHistory;
-
+  const [isEdit, setIsEdit] = useState(false);
+  const [newStatus, setNewStatus] = useState();
+  const handleChangeStatus = (value) => {
+    setNewStatus(value);
+  };
+  const [idSelectUpdate, setIdSelectUpdate] = useState();
+  const handleEdit = (id) => {
+    setIsEdit(true);
+    setIdSelectUpdate(id);
+  };
+  const handleSaveStatus = async (product) => {
+    const data = {
+      statusOrder: newStatus,
+    };
+    await callUpdateOrder(product.id, data);
+    fetchOrderHistory();
+  };
   const columns = [
     {
       title: "Tóm tắt đơn hàng",
@@ -64,7 +91,15 @@ const OrderHistory = () => {
           (item) => item?.inforProduct?.title
         );
         return (
-          <ReactJson src={product} collapsed={true} name="Tóm tắt đơn mua" />
+          <ReactJson
+            displayObjectSize={false}
+            enableClipboard={false}
+            displayDataTypes={false}
+            quotesOnKeys={false}
+            src={product}
+            collapsed={true}
+            name="Tóm tắt "
+          />
         );
       },
     },
@@ -74,9 +109,13 @@ const OrderHistory = () => {
       render: (text, record, index) => {
         return (
           <ReactJson
+            enableClipboard={false}
+            displayObjectSize={false}
+            displayDataTypes={false}
+            quotesOnKeys={false}
             src={record.userInfo}
             collapsed={true}
-            name="Thông tin người mua"
+            name="Người mua"
           />
         );
       },
@@ -84,7 +123,27 @@ const OrderHistory = () => {
     {
       title: "Status",
       render: (text, record, index) => {
-        return <span>{status[record.statusOrder].des}</span>;
+        return (
+          <>
+            {!isEdit && <span>{status[record.statusOrder].des}</span>}
+            {isEdit && idSelectUpdate !== record.id && (
+              <span>{status[record.statusOrder].des}</span>
+            )}
+            {isEdit && idSelectUpdate === record.id && (
+              <Select
+                defaultValue={status[record.statusOrder].des}
+                style={{ width: 120 }}
+                onChange={handleChangeStatus}
+                options={status.map((item) => {
+                  return {
+                    value: item.statusOrder,
+                    label: item.des,
+                  };
+                })}
+              />
+            )}
+          </>
+        );
       },
     },
     {
@@ -119,8 +178,39 @@ const OrderHistory = () => {
       render: (text, record, index) => {
         return (
           <div className="flex items-center justify-between gap-2">
-            <Link to={`${record.id}`}>Detail</Link>
-            {isAdmin && <Button>Update</Button>}
+            {!isEdit && <Link to={`${record.id}`}>Detail</Link>}
+            {isAdmin && !isEdit && (
+              <Button onClick={() => handleEdit(record.id)}>update</Button>
+            )}
+            {isEdit && idSelectUpdate !== record.id && (
+              <Link to={`${record.id}`}>Detail</Link>
+            )}
+            {(isAdmin && !isEdit && idSelectUpdate !== record.id) ||
+              !isEdit ||
+              (idSelectUpdate !== record.id && (
+                <Button onClick={() => handleEdit(record.id)}>update</Button>
+              ))}
+            {isAdmin && isEdit && idSelectUpdate === record.id && (
+              <>
+                <Button
+                  onClick={() => {
+                    handleSaveStatus(record);
+                    setIsEdit(false);
+                    setIdSelectUpdate();
+                  }}
+                >
+                  save
+                </Button>
+                <Button
+                  onClick={() => {
+                    setIsEdit(false);
+                    setIdSelectUpdate();
+                  }}
+                >
+                  cancel
+                </Button>
+              </>
+            )}
           </div>
         );
       },

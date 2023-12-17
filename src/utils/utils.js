@@ -37,3 +37,4 @@ export const getAvatarUrl = (avtarName) => {
     ? `https://res.cloudinary.com/debcojldf/image/upload/v1702457308/${avtarName}`
     : UserImage;
 };
+

@@ -2,12 +2,18 @@
 /* eslint-disable no-unused-vars */
 import { CloseOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Space } from "antd";
-const AddProductChild = ({ productChildren, setProductChildren }) => {
-  const [form] = Form.useForm();
+import { useEffect } from "react";
+
+const AddProductChild = ({
+  productChildren,
+  setProductChildren,
+  formAddChild,
+}) => {
+  // const [form] = Form.useForm();
 
   return (
     <Form
-      form={form}
+      form={formAddChild}
       name="dynamic_form_complex"
       style={{
         maxWidth: "100%",
@@ -17,13 +23,11 @@ const AddProductChild = ({ productChildren, setProductChildren }) => {
         items: [{}],
       }}
       onChange={() => {
-        setProductChildren(form.getFieldsValue());
+        setProductChildren(formAddChild.getFieldsValue());
       }}
     >
       <Form.List name="items">
         {(fields, { add, remove }) => {
-          // const data = form.getFieldsValue();
-          // setA(data);
           return (
             <div
               style={{
@@ -41,6 +45,7 @@ const AddProductChild = ({ productChildren, setProductChildren }) => {
                     <CloseOutlined
                       onClick={() => {
                         remove(field.name);
+                        setProductChildren(formAddChild.getFieldsValue());
                       }}
                     />
                   }
@@ -71,6 +76,7 @@ const AddProductChild = ({ productChildren, setProductChildren }) => {
                               <CloseOutlined
                                 onClick={() => {
                                   subOpt.remove(subField.name);
+                                  setProductChildren(formAddChild.getFieldsValue());
                                 }}
                               />
                             </Space>
@@ -88,16 +94,17 @@ const AddProductChild = ({ productChildren, setProductChildren }) => {
                   </Form.Item>
                 </Card>
               ))}
-
-              <Button
-                type="dashed"
-                onClick={() => {
-                  add();
-                }}
-                block
-              >
-                + Add Item
-              </Button>
+              {productChildren?.items?.length < 2 && (
+                <Button
+                  type="dashed"
+                  onClick={() => {
+                    add();
+                  }}
+                  block
+                >
+                  + Add Item
+                </Button>
+              )}
             </div>
           );
         }}

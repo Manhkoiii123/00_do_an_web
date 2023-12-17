@@ -22,6 +22,8 @@ import ProductPage from "./src/pages/admin/products/ProductPage";
 import VerifyEmail from "./src/pages/forgotPassword/VerifyEmail";
 import CheckOut from "./src/components/UserAccount/CheckOut";
 import CheckoutSuccess from "./src/components/UserAccount/CheckoutSuccess";
+import ProtectedRoute from "./src/components/protectedRoute/ProtectedRoute";
+import RolePage from "./src/pages/admin/role/RolePage";
 
 export default function useRouteElement() {
   const routeElements = useRoutes([
@@ -102,7 +104,11 @@ export default function useRouteElement() {
     },
     {
       path: "/admin",
-      element: <AdminPage></AdminPage>,
+      element: (
+        <ProtectedRoute>
+          <AdminPage />
+        </ProtectedRoute>
+      ),
       children: [
         {
           index: true,
@@ -127,6 +133,10 @@ export default function useRouteElement() {
         {
           path: "order",
           element: <OrderHistory />,
+        },
+        {
+          path: "role",
+          element: <RolePage />,
         },
         {
           path: "order/:id",

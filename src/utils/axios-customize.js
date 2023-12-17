@@ -10,7 +10,11 @@ instance.defaults.headers.common = {
 };
 
 instance.interceptors.request.use(
-  function (config) {
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   function (error) {

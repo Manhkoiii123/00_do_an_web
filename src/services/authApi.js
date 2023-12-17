@@ -36,3 +36,5 @@ export const callUpdateAvatar = (fileImg) => {
     },
   });
 };
+
+

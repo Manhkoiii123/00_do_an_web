@@ -61,6 +61,7 @@ const OrderDetail = () => {
   useEffect(() => {
     fetchDataDetail();
   }, [id]);
+  // console.log(dataDetail);
   useEffect(() => {
     setCurrentStep(dataDetail?.statusOrder);
     if (dataDetail?.statusOrder === 4) {
@@ -101,12 +102,14 @@ const OrderDetail = () => {
               }
               alt=""
             />
-            <span className="text-sm font-normal leading-5 text-gray-700">
-              {record?.inforProduct?.title}
-            </span>
-            {record?.childTitle !== "none" && (
-              <span>({record?.childTitle})</span>
-            )}
+            <div>
+              <span className="text-sm font-normal leading-5 text-gray-700 line-clamp-2">
+                {record?.inforProduct?.title}
+              </span>
+              {record?.childTitle !== "none" && (
+                <span>({record?.childTitle})</span>
+              )}
+            </div>
           </div>
         );
       },
@@ -152,6 +155,7 @@ const OrderDetail = () => {
     const res = await callCancelOrder(id);
     if (res.status === 200) {
       message.success("Huỷ Đơn Hàng Thành Công");
+      fetchDataDetail();
     }
   };
 

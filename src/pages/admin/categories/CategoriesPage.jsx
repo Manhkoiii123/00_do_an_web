@@ -1,26 +1,31 @@
 /* eslint-disable no-unused-vars */
 import { EditOutlined } from "@ant-design/icons";
-import { Badge, Button, Input, Popconfirm, Space, Table } from "antd";
+import { Badge, Button, Input, Popconfirm, Space, Table, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import CreateCategory from "./CreateCategory";
 import CategoryDetail from "./CategoryDetail";
 import { SearchOutlined } from "@ant-design/icons";
-import { callGetHomeProduct } from "../../../services/productApi";
-import { callCategoryDetail } from "../../../services/adminApi";
+import {
+  callAdminCategoryDetail,
+  callAdminDeleteCategory,
+  callAllCategory,
+} from "../../../services/adminApi";
+import ModalUpdateCate from "./ModalUpdateCate";
+import ReactJson from "react-json-view";
+import moment from "moment";
 
 const CategoriesPage = () => {
   const [searchText, setSearchText] = useState("");
-  const [data, setData] = useState([]);
   const [categories, setCategories] = useState([]);
-
+  const [data, setData] = useState([]);
   const fetchHomeData = async () => {
-    const res = await callGetHomeProduct();
+    const res = await callAllCategory();
     if (res.status === 200) {
-      setCategories(res.data.productCategorys);
-      const tmp = res.data.productCategorys;
-      const a = tmp.filter((item) => item.parentId === "");
-      setData(a);
+      setData(res.data.productCategory);
+    }
+    if (res?.data?.code === 400) {
+      message.error(res?.data?.message);
     }
   };
   useEffect(() => {
@@ -28,6 +33,7 @@ const CategoriesPage = () => {
   }, []);
 
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [openUpdateCategory, setOpenUpdateCategory] = useState(false);
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -128,84 +134,19 @@ const CategoriesPage = () => {
   });
   const [openDetail, setOpenDetail] = useState(false);
   const [dataDetail, setDataDetail] = useState(null);
-  // console.log(dataDetail);
-  const expandedRowRender = (record, index, indent, expanded) => {
-    const childrenData = categories.filter((item) => item.parentId !== "");
-    const id = record._id;
-    const filterChildrendata = childrenData.filter(
-      (item) => item.parentId === id
-    );
-    const columnsChildren = [
-      {
-        title: "Title",
-        dataIndex: "title",
-        key: "title",
-        render: (text, record, index) => {
-          return (
-            <a
-              onClick={async () => {
-                const res = await callCategoryDetail(record._id);
-                setDataDetail(res.data.productCategory);
-                setOpenDetail(true);
-              }}
-            >
-              {record.title}
-            </a>
-          );
-        },
-      },
-      {
-        title: "Description",
-        dataIndex: "description",
-        key: "description",
-        className: "w-[600px]",
-      },
-      {
-        title: "Status",
-        key: "status",
-        render: () => <Badge status="success" text="Finished" />,
-      },
-      {
-        title: "Action",
-        render: (text, record, index) => {
-          return (
-            <div style={{ display: "flex", gap: "5px" }}>
-              <Popconfirm
-                placement="leftTop"
-                title="Xác nhận xóa category"
-                description="Bạn có chắc chắn muốn xóa category ? "
-                okText="Xác nhận"
-                cancelText="Hủy"
-                okButtonProps={{ type: "default" }}
-                //   onConfirm={() => handleDeleteBook(record._id)}
-              >
-                <Button>
-                  <MdDelete color="red"></MdDelete>
-                </Button>
-              </Popconfirm>
-
-              <Button
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <EditOutlined />
-              </Button>
-            </div>
-          );
-        },
-      },
-    ];
-
-    return (
-      <Table
-        columns={columnsChildren}
-        dataSource={filterChildrendata}
-        pagination={false}
-      />
-    );
+  const [idDetail, setIdDetail] = useState();
+  const handleDeleteCategory = async (id) => {
+    const res = await callAdminDeleteCategory(id);
+    if (res.data.code === 200) {
+      message.success("Xóa Thành công ");
+      const res = await callAllCategory();
+      if (res.status === 200) {
+        setData(res.data.productCategory);
+      }
+      if (res?.data?.code === 400) {
+        message.error(res?.data?.message);
+      }
+    }
   };
   const columns = [
     {
@@ -216,10 +157,9 @@ const CategoriesPage = () => {
         return (
           <a
             onClick={async () => {
-              const res = await callCategoryDetail(record._id);
+              const res = await callAdminCategoryDetail(record.id);
               setDataDetail(res.data.productCategory);
               setOpenDetail(true);
-              // setDataDetail(record);
             }}
           >
             {record.title}
@@ -228,6 +168,7 @@ const CategoriesPage = () => {
       },
       ...getColumnSearchProps("title"),
     },
+
     {
       title: "Description",
       dataIndex: "description",
@@ -250,7 +191,7 @@ const CategoriesPage = () => {
               okText="Xác nhận"
               cancelText="Hủy"
               okButtonProps={{ type: "default" }}
-              //   onConfirm={() => handleDeleteBook(record._id)}
+              onConfirm={() => handleDeleteCategory(record.id)}
             >
               <Button>
                 <MdDelete color="red"></MdDelete>
@@ -258,6 +199,15 @@ const CategoriesPage = () => {
             </Popconfirm>
 
             <Button
+              onClick={async () => {
+                // console.log(record);
+                const res = await callAdminCategoryDetail(record.id);
+                // console.log(record.id);
+                // console.log(res);
+                setIdDetail(record.id);
+                setDataDetail(res.data.productCategory);
+                setOpenUpdateCategory(true);
+              }}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -281,15 +231,10 @@ const CategoriesPage = () => {
             Add New Category
           </Button>
         </div>
-        <Table
-          columns={columns}
-          expandable={{
-            expandedRowRender,
-            defaultExpandAllRows: true,
-          }}
-          dataSource={data}
-        />
+        <Table columns={columns} dataSource={data} />
         <CreateCategory
+          data={data}
+          setData={setData}
           openCreateCategory={openCreateCategory}
           setOpenCreateCategory={setOpenCreateCategory}
         />
@@ -300,6 +245,16 @@ const CategoriesPage = () => {
         openDetail={openDetail}
         setOpenDetail={setOpenDetail}
       ></CategoryDetail>
+      <ModalUpdateCate
+        data={data}
+        setData={setData}
+        idDetail={idDetail}
+        setIdDetail={setIdDetail}
+        openUpdateCategory={openUpdateCategory}
+        setOpenUpdateCategory={setOpenUpdateCategory}
+        dataDetail={dataDetail}
+        setDataDetail={setDataDetail}
+      ></ModalUpdateCate>
     </>
   );
 };

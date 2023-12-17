@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { Button, Popconfirm, Table, Tag } from "antd";
 import { MdDelete } from "react-icons/md";
-import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { StarIcon } from "../../utils/icons";
 import { formatCurrency, generateNameId } from "../../utils/utils";
 import { callDeleteWishlist, callGetWishlist } from "../../services/productApi";
 import { doGetWishListAction } from "../../redux/product/productSlice";
 import { Link } from "react-router-dom";
+
 const WishList = () => {
   const dispatch = useDispatch();
   const wishList = useSelector((state) => state.product.wishList);
@@ -83,7 +83,7 @@ const WishList = () => {
       dataIndex: "status",
       key: "status",
       render: (text, record, index) => {
-        return <Tag color="green">{record.status}</Tag>;
+        return record.status;
       },
     },
     {
