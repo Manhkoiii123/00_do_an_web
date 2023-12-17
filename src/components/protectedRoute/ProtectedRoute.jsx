@@ -7,7 +7,7 @@ const RoleBaseRoute = (props) => {
   const isAdminRoute = window.location.pathname.startsWith("/admin");
   const profile = useSelector((state) => state.account.profile);
   const role = profile?.role?.title;
-  if (isAdminRoute && role !== "Khách hàng") {
+  if ((isAdminRoute && role !== "Khách hàng") || !isAdminRoute) {
     return <>{props.children}</>;
   } else {
     return <NotPermitted></NotPermitted>;
