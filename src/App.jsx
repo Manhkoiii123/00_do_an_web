@@ -7,8 +7,10 @@ import { useEffect } from "react";
 import { callGetWishlist } from "./services/productApi";
 import {
   doGetCompareProduct,
+  doGetInfoWeb,
   doGetWishListAction,
 } from "./redux/product/productSlice";
+import { callInfoWeb } from "./services/adminApi";
 
 function App() {
   const dispatch = useDispatch();
@@ -39,6 +41,14 @@ function App() {
       };
       fetchCompare();
     }
+  }, []);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const res = await callInfoWeb();
+      dispatch(doGetInfoWeb(res.data.setting));
+    };
+    fetch();
   }, []);
 
   const routerElements = useRouteElement();

@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useSelector } from "react-redux";
 import NotPermitted from "./NotPermitted";
+import { Navigate } from "react-router-dom";
 const RoleBaseRoute = (props) => {
   //có vào trang admin ko
   const isAdminRoute = window.location.pathname.startsWith("/admin");
@@ -14,7 +15,7 @@ const RoleBaseRoute = (props) => {
 };
 const ProtectedRoute = (props) => {
   const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
-  console.log(isAuthenticated);
+
   return (
     <>
       {isAuthenticated === true && (
@@ -22,11 +23,11 @@ const ProtectedRoute = (props) => {
           <RoleBaseRoute>{props.children}</RoleBaseRoute>
         </>
       )}
-      {/* {!isAuthenticated === true && (
+      {isAuthenticated === false && (
         <>
           <Navigate to="/login" />
         </>
-      )} */}
+      )}
     </>
   );
 };

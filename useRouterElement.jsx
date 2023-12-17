@@ -50,35 +50,69 @@ export default function useRouteElement() {
 
         {
           path: "orderhistory",
-          element: <OrderHistory />,
+
+          element: (
+            <ProtectedRoute>
+              <OrderHistory />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "orderhistory/:id",
-          element: <OrderDetail />,
+
+          element: (
+            <ProtectedRoute>
+              <OrderDetail />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "shoppingcart",
-          element: <ShoppingCart />,
+          element: (
+            <ProtectedRoute>
+              <ShoppingCart />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "wishlist",
-          element: <WishList />,
+          element: (
+            <ProtectedRoute>
+              <WishList />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "compare",
-          element: <Compare />,
+          element: (
+            <ProtectedRoute>
+              <Compare />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "profile",
-          element: <Profile />,
+          element: (
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "checkout",
-          element: <CheckOut></CheckOut>,
+          element: (
+            <ProtectedRoute>
+              <CheckOut />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "checkoutsuccess",
-          element: <CheckoutSuccess></CheckoutSuccess>,
+          element: (
+            <ProtectedRoute>
+              <CheckoutSuccess />
+            </ProtectedRoute>
+          ),
         },
       ],
     },

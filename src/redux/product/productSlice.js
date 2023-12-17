@@ -51,6 +51,9 @@ export const productSlice = createSlice({
     doUpdateInfoWeb: (state, action) => {
       state.infoWeb = action.payload;
     },
+    doGetInfoWeb: (state, action) => {
+      state.infoWeb = action.payload;
+    },
   },
 });
 
@@ -63,6 +66,7 @@ export const {
   doGetCompareProduct,
   doUpdateInfoWeb,
   doDeleteCompare,
+  doGetInfoWeb,
 } = productSlice.actions;
 
 export default productSlice.reducer;
