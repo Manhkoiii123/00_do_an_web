@@ -99,7 +99,7 @@ const TableAddProduct = ({
                         className="grid grid-cols-4 col-span-4 gap-2 "
                       >
                         <div className="w-[calc(1/4 - 16px)] col-span-1">
-                          {item2.first}
+                          {item2?.first}
                         </div>
                         <div className="w-[calc(1/4 - 16px)] col-span-1 ">
                           <InputNumber

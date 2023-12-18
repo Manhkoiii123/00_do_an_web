@@ -24,12 +24,9 @@ const FeaturedProducts = ({ productFeatureds }) => {
             ENDS OF CHRISTMAS
           </span>
         </div>
-        {/* <Button className="w-1/2">
-          <Link to="/productlist">SHOP NOW</Link>
-        </Button> */}
         <img
           className="w-[312px] h-[400px] object-cover"
-          src="https://s3-alpha-sig.figma.com/img/a593/5e4a/e865aea09c3021d056c99782b3748bc2?Expires=1702252800&Signature=ZaFkmv53SOWTSqanRDqSLO6XdBeYeAOIkgeenDcKYvxaiJ3HPkyGTymNnPisa7HoBWzAspzGJJLBYT0YbqFRo4D9uSALE5ehawrbivSlKc3XxKQf7svEYC3Ri~NfSkatWWFmrvshHk2y0AMkA9yxewBxB4QlBq2mWVX50CiJMo4vt5kFJMJAqLwnAXXpCNQrW-X9q6Fk-6RSWZPyD-wDG2G8tOR5qZxoTfL~vvFWOTN6KvUkORAh6oeSYkaQ-wYKt4l2hpXfzOqoD5w9K0qvsmtiRz2VT3Pj9Ip4HCRf8VH7CBTHK6gH3-WnZfNSJgY8awD6sg8yObrgJqfc0RqelQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+          src="Image.jpg"
           alt=""
         />
       </div>

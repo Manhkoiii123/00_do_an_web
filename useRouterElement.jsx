@@ -50,7 +50,6 @@ export default function useRouteElement() {
 
         {
           path: "orderhistory",
-
           element: (
             <ProtectedRoute>
               <OrderHistory />

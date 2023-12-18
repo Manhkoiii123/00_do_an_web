@@ -61,7 +61,6 @@ const Profile = () => {
     };
     const res = await callUpdateUser(data);
     if (res.data.code === 200) {
-      console.log(res.data.user);
       localStorage.setItem("profile", JSON.stringify(res.data.user));
       dispatch(doUpdateUserInfo(res.data.user));
       message.success("Update thông tin thành công");

@@ -20,25 +20,36 @@ import {
 } from "../../../redux/product/productSlice";
 import { formatCurrency, generateNameId } from "../../../utils/utils";
 import noproduct from "../../../assets/images/no-product.png";
-import { doGetCartListItemAction } from "../../../redux/cart/cartSlice";
+import {
+  doGetCartListItemAction,
+  doLogOutCart,
+} from "../../../redux/cart/cartSlice";
 import { useEffect, useState } from "react";
 import { callDeleteFromCart, callGetCart } from "../../../services/cartApi";
 
 const MiddleNav = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
-  const token = useSelector((state) => state.account.token);
   const profile = useSelector((state) => state.account.profile);
   const role = profile.role?.title;
   const fetch = async () => {
     const res = await callGetCart();
+    // await callGetCart();
     if (res.data.cart.products) {
       dispatch(doGetCartListItemAction(res.data.cart.products));
     }
   };
+
+  const fetchWishList = async () => {
+    const res = await callGetWishlist();
+    if (res.data.listProductsFavorite) {
+      dispatch(doGetWishListAction(res.data.listProductsFavorite));
+    }
+  };
   useEffect(() => {
     fetch();
-  }, [token]);
+    fetchWishList();
+  }, []);
   const [info, setInfo] = useState({});
   const infoWeb = useSelector((state) => state.product.infoWeb);
   useEffect(() => {
@@ -220,6 +231,7 @@ const MiddleNav = () => {
     localStorage.removeItem("profile");
     dispatch(doLogoutWishlist());
     dispatch(doLogoutAction());
+    dispatch(doLogOutCart());
   };
   const contentUserList = () => {
     return (

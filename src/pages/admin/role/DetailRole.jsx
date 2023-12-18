@@ -3,7 +3,7 @@ import { Descriptions, Drawer } from "antd";
 import moment from "moment";
 
 const DetailRole = ({ openDetail, setOpenDetail, dataDetail }) => {
-  console.log(dataDetail);
+
   return (
     <Drawer
       title={`Thông tin chi tiết role = ${dataDetail?.title}`}

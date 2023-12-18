@@ -33,7 +33,7 @@ const Widget = () => {
                     Save up to 50% on select Xbox games. Get 3 months of PC Game
                     Pass for $2 USD.
                   </span>
-                  <Link to="/productlist">
+                  <Link to="/">
                     <Button className="text-white bg-primary w-[40%] hover:opacity-80 ">
                       Shop now
                     </Button>
@@ -72,14 +72,14 @@ const Widget = () => {
                   <span className="text-xl font-semibold leading-8 text-white">
                     New Google Pixel 6 Pro
                   </span>
-                  <Link to="/productlist">
+                  <Link to="/">
                     <Button kind="primary">Shop now</Button>
                   </Link>
                 </div>
               </Col>
               <Col span={12}>
                 <img
-                  src="https://s3-alpha-sig.figma.com/img/1e27/e3da/3a9722cbfd03ad06711ce321ea6a8e37?Expires=1702252800&Signature=CIbd3l~-3jYuMVnoSI-EPefHx2eEsSd8St0aS1Xq~C-2~5SeIoAzAeTqC9i9QKmj5kNF1UUAY~PTuBYlFIC58TnJnhPngXZYdCMsD74L1PsVsPviTDbACW4OMYu1RxIlm0s~Tz0rb9njd1yg8U8CvPjW6IapPKxPSFezAA7byHPlSyaKhqxlqUpaGaEVNYc6LkJ10ZFj-7QObZfRKKG4eH-UmLmB9nKTn7EYF-Dpub3sa7EN9pvMMs~0Xc-K~mDmfKNd9owfJBLd2vZ5~fonGXdpUvICOjZy1BeXQ2nsg52DZAWnj1AiEsAxG84IIL2mTD0CzbOlxLJAUTXWmLwQww__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+                  src="1.png"
                   alt=""
                   className="w-[312px] h-[312px] absolute top-[35px] left-[35px] object-cover "
                 />
@@ -107,10 +107,7 @@ const Widget = () => {
                   alignItems: "center",
                 }}
               >
-                <img
-                  src="https://s3-alpha-sig.figma.com/img/77ff/1aeb/09dedd4bf17ee12f721038f32073f7a3?Expires=1702252800&Signature=DPhqyldDXnAGvlojwNI0ce0c5JCxvTFOCXGoW1UBnbqcgXH6zCH8ehOvm4HPeN1kU8uKUf~CT~fsDKw7GmbjYAbEVU5lDx9aMJvsara3tLK8VVVvsI12RrLFgRk8-aaZ-trxxYP1K0sh6Y3lUmj0V7s~MAiwYsThv5-a8CsrlrieYr--cvNC1vzwBUkI8wy0k7FM2gxMzPgU~fZhLfWgHUBv6-SKM4Q5m3aeaPFIro7KrdobMOhmwul5A-t4aSjzwnnXdGZlr80738Sum0J8rC~RgRIEMFCHCnJT0mY~kJWda3We5o9Yr5-K8I9qNiZWnM8OJO2CnsviniVzii7V6g__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
-                  alt=""
-                />
+                <img src="2.png" alt="" />
               </Col>
               <Col
                 span={12}
@@ -128,7 +125,7 @@ const Widget = () => {
                 <span className="text-[#2DA5F3] text-lg font-semibold leading-6">
                   $ 299 USD
                 </span>
-                <Link to="/productlist">
+                <Link to="/">
                   <Button kind="primary" className="uppercase">
                     Shop now
                   </Button>

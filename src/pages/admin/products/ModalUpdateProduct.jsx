@@ -124,7 +124,7 @@ const ModalUpdateProduct = ({
   const [form] = useForm();
   const [formAddChild] = useForm();
   const [categorySelect, setCategorySelect] = useState();
-  console.log(dataDetail);
+
   useEffect(() => {
     setCategorySelect(dataDetail?.productCategoryId);
   }, [dataDetail?.productCategoryId]);

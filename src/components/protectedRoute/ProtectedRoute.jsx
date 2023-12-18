@@ -23,11 +23,7 @@ const ProtectedRoute = (props) => {
           <RoleBaseRoute>{props.children}</RoleBaseRoute>
         </>
       )}
-      {isAuthenticated === false && (
-        <>
-          <Navigate to="/login" />
-        </>
-      )}
+      {!localStorage.getItem("token") && <Navigate to="/login" />}
     </>
   );
 };

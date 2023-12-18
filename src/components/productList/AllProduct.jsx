@@ -61,8 +61,9 @@ const AllProduct = ({
   const handleCallProducts = async () => {
     const filterProduct = filter?.slice(1);
     const res = await callGetProducts(filterProduct);
+    console.log(res);
     setProductList(res.data.products);
-    setTotal(res.data.totalPage);
+    setTotal(res.data.countRecord);
   };
   const onChangePagi = (pagination) => {
     if (pagination && pagination.current !== current) {

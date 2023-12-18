@@ -15,7 +15,7 @@ const ProductQuery = ({ label, data }) => {
       </div>
       <div className="flex flex-wrap justify-between h-[640px] gap-4">
         {data &&
-          data?.map((product, index) => {
+          data?.slice(0, 8)?.map((product, index) => {
             return (
               <div className="w-[216px] h-1/2" key={index}>
                 <Product product={product} star />

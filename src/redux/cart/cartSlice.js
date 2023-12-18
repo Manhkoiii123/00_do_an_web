@@ -34,6 +34,9 @@ export const cartSlice = createSlice({
       });
       state.cart = extendCart;
     },
+    doLogOutCart: (state) => {
+      state.cart = [];
+    },
     doUpdateQuantityAction: (state, action) => {
       const { id, title, value } = action.payload;
       const updateCart = state.cart.map((item) => {
@@ -99,6 +102,7 @@ export const {
   doUpdateSelectAction,
   doUpdateSelectAll,
   doBuyNowAction,
+  doLogOutCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
