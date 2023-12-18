@@ -8,6 +8,7 @@ import { callGetHomeProduct } from "../../services/productApi";
 
 const ProductList = () => {
   //id category
+  
   const params = useParams();
   const id = params.id;
   const [categories, setCategories] = useState([]);

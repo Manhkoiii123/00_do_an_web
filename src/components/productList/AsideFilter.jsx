@@ -4,8 +4,9 @@ import { Checkbox, Col, Divider, Form, InputNumber, Row } from "antd";
 import { useForm } from "antd/es/form/Form";
 import Button from "../Button/Button";
 import { useState } from "react";
-
+import { useTranslation } from "react-i18next";
 const AsideFilter = ({ setFilterAside, cate, setCurrent }) => {
+  const { t } = useTranslation();
   const [category, setCategory] = useState([]);
   const [form] = useForm();
   const [ratingFilter, setRatingFilter] = useState("");
@@ -97,14 +98,13 @@ const AsideFilter = ({ setFilterAside, cate, setCurrent }) => {
       <Form
         onFinish={onFinish}
         form={form}
-        //values đằng sau nó là cái values lọc luôn
         onValuesChange={(changedValues, values) =>
           handleChangeFilter(changedValues, values)
         }
       >
         <Form.Item
           name="category"
-          label="Danh mục sản phẩm"
+          label={t("aside filter.all categories")}
           labelCol={{ span: 24 }}
         >
           <Checkbox.Group>

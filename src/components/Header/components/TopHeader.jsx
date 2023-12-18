@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Pinterest, Youtube } from "../../../utils/icons";
 import { Select } from "antd";
+import { useTranslation } from "react-i18next";
+import { locales } from "../../../i18n/i18n";
+
 const TopHeader = () => {
+  const { i18n } = useTranslation();
+  const currentLanguage = locales[i18n.currentLanguage];
+  console.log(currentLanguage);
   const handleChangeLanguage = (value) => {
-    console.log(`selected ${value}`);
-  };
-  const handleChangeCurrency = (value) => {
-    console.log(`selected ${value}`);
+    i18n.changeLanguage(value);
   };
 
   return (
@@ -36,17 +39,8 @@ const TopHeader = () => {
               className="w-[100px]"
               onChange={handleChangeLanguage}
               options={[
-                { value: "eng", label: "English" },
-                { value: "vie", label: "Việt Nam" },
-              ]}
-            />
-            <Select
-              defaultValue="Đồng"
-              className="w-[100px]"
-              onChange={handleChangeCurrency}
-              options={[
-                { value: "usd", label: "Dollar" },
-                { value: "dong", label: "Đồng" },
+                { value: "en", label: "English" },
+                { value: "vi", label: "Việt Nam" },
               ]}
             />
           </div>
