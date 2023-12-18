@@ -6,18 +6,13 @@ import NewProduct from "../../components/home/NewProduct";
 import ProductRelated from "../../components/home/ProductRelated";
 
 import { WechatOutlined } from "@ant-design/icons";
-import ChatUser from "../../components/chat/ChatUser";
 import { useEffect, useState } from "react";
 import { callGetHomeProduct } from "../../services/productApi";
 import { useDispatch } from "react-redux";
 import { doGetCategoryParent } from "../../redux/product/productSlice";
+import { Link } from "react-router-dom";
 const Home = () => {
   const dispatch = useDispatch();
-
-  const [showChat, setShowChat] = useState(false);
-  const handleShowChat = () => {
-    setShowChat(!showChat);
-  };
   const [productsBestSellers, setProductsBestSellers] = useState([]);
   const [categories, setCategories] = useState([]);
   const [productFeatureds, setProductFeatureds] = useState([]);
@@ -54,15 +49,9 @@ const Home = () => {
         productsBestSellers={productsBestSellers}
       />
       <div className="fixed bottom-[20px] right-[20px] w-10 h-10 border border-gray-200 flex items-center justify-center text-primary rounded-full cursor-pointer">
-        <div onClick={() => handleShowChat()}>
+        <Link to={"http://localhost:3000/api/v1/chat"} target="_blank">
           <WechatOutlined />
-        </div>
-
-        {showChat && (
-          <div className="absolute bottom-[150%] right-[50%]">
-            <ChatUser setShowChat={setShowChat} />
-          </div>
-        )}
+        </Link>
       </div>
     </div>
   );

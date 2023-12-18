@@ -34,7 +34,7 @@ const AdminPage = () => {
       label: "Orders",
     },
     {
-      path: "chat",
+      path: "http://localhost:3000/api/v1/admin/chat",
       label: "Chat",
     },
     {
