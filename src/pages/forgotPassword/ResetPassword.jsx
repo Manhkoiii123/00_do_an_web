@@ -1,16 +1,31 @@
-import { Divider, Form, Input } from "antd";
-
+import { Divider, Form, Input, message } from "antd";
 
 // import './'
 import { useState } from "react";
 import Button from "../../components/Button";
 import { useForm } from "antd/es/form/Form";
+import { resetPass } from "../../services/authApi";
+import { useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
   const [form] = useForm();
   const [isLoading, setIsLoading] = useState(false);
+  const nav = useNavigate();
   const onFinish = async (values) => {
-    console.log(values);
+    const data = {
+      email: localStorage.getItem("emailVerify"),
+      password: values.password,
+    };
+    setIsLoading(true);
+
+    const res = await resetPass(data);
+    if (res.data.code === 200) {
+      message.success("Đổi mật khẩu thành công");
+      nav("/login");
+      localStorage.removeItem("emailVerify");
+    } else if (res.data.code === 400) {
+      message.error(res.data.message);
+    }
   };
   return (
     <div className="register-page">

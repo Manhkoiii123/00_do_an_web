@@ -13,6 +13,8 @@ const ForgotPassword = () => {
     localStorage.setItem("emailVerify", values.email);
     setIsLoading(true);
     const res = await callForgotPasswordEmail({ ...values });
+
+    // console.log(res);
     setIsLoading(false);
     if (res.data.code === 200) {
       nav("/verifyemail");

@@ -24,12 +24,14 @@ import CheckOut from "./src/components/UserAccount/CheckOut";
 import CheckoutSuccess from "./src/components/UserAccount/CheckoutSuccess";
 import ProtectedRoute from "./src/components/protectedRoute/ProtectedRoute";
 import RolePage from "./src/pages/admin/role/RolePage";
+import NotFound from "./src/components/notFound/NotFound";
 
 export default function useRouteElement() {
   const routeElements = useRoutes([
     {
       path: "/",
       element: <MainLayout></MainLayout>,
+      errorElement: <NotFound />,
       children: [
         {
           index: true,
@@ -137,6 +139,7 @@ export default function useRouteElement() {
     },
     {
       path: "/admin",
+      errorElement: <NotFound />,
       element: (
         <ProtectedRoute>
           <AdminPage />
@@ -145,37 +148,73 @@ export default function useRouteElement() {
       children: [
         {
           index: true,
-          element: <Dashboard />,
+          element: (
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "user",
-          element: <UserPage />,
+          element: (
+            <ProtectedRoute>
+              <UserPage />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "categories",
-          element: <CategoriesPage />,
+          element: (
+            <ProtectedRoute>
+              <CategoriesPage />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "products",
-          element: <ProductPage />,
+          element: (
+            <ProtectedRoute>
+              <ProductPage />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "chat",
-          element: <ChatAdmin />,
+          element: (
+            <ProtectedRoute>
+              <ChatAdmin />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "order",
-          element: <OrderHistory />,
+          element: (
+            <ProtectedRoute>
+              <OrderHistory />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "role",
-          element: <RolePage />,
+          element: (
+            <ProtectedRoute>
+              <RolePage />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "order/:id",
-          element: <OrderDetail />,
+          element: (
+            <ProtectedRoute>
+              <OrderDetail />
+            </ProtectedRoute>
+          ),
         },
       ],
+    },
+    {
+      path: "*",
+      element: <NotFound />,
     },
   ]);
   return routeElements;

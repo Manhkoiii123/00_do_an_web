@@ -15,18 +15,19 @@ const VerifyEmail = () => {
       email: localStorage.getItem("emailVerify"),
       otp: values.otp,
     };
-    console.log(data);
-    // setIsLoading(true);
-    // const res = await callOtp({ ...data });
-    // setIsLoading(false);
-    // if (res.data.code === 200) {
-    //   nav("/resetpassword");
-    // } else {
-    //   notification.error({
-    //     message: "Đã có lỗi xảy ra",
-    //     description: res.data.message,
-    //   });
-    // }
+    // console.log(data);
+    setIsLoading(true);
+    const res = await callOtp({ ...data });
+
+    setIsLoading(false);
+    if (res.data.code === 200) {
+      nav("/resetpassword");
+    } else {
+      notification.error({
+        message: "Đã có lỗi xảy ra",
+        description: res.data.message,
+      });
+    }
   };
   return (
     <div className="register-page">

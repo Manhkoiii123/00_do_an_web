@@ -37,4 +37,6 @@ export const callUpdateAvatar = (fileImg) => {
   });
 };
 
-
+export const resetPass = (data) => {
+  return instance.patch("/account/forgot/reset", data);
+};
