@@ -42,8 +42,8 @@ const MiddleNav = () => {
 
   const fetchWishList = async () => {
     const res = await callGetWishlist();
-    if (res.data.listProductsFavorite) {
-      dispatch(doGetWishListAction(res.data.listProductsFavorite));
+    if (res?.data?.listProductsFavorite) {
+      dispatch(doGetWishListAction(res?.data?.listProductsFavorite));
     }
   };
   useEffect(() => {
@@ -67,8 +67,8 @@ const MiddleNav = () => {
     const res = await callDeleteWishlist(id);
     if (res.data.code === 200) {
       const res2 = await callGetWishlist();
-      if (res2.data.code === 200) {
-        dispatch(doGetWishListAction(res2.data.listProductsFavorite));
+      if (res2?.data?.code === 200) {
+        dispatch(doGetWishListAction(res2?.data?.listProductsFavorite));
       }
       message.success("Xóa khỏi danh sách yêu thích thành công");
     }
@@ -82,7 +82,7 @@ const MiddleNav = () => {
     if (res.data.code === 200) {
       const res2 = await callGetCart();
       if (res2.status === 200) {
-        dispatch(doGetCartListItemAction(res2.data.cart.products));
+        dispatch(doGetCartListItemAction(res2?.data?.cart?.products));
       }
       message.success("Xóa giỏ hàng thành công");
     }
@@ -99,31 +99,31 @@ const MiddleNav = () => {
                   <div className="flex justify-between gap-4" key={index}>
                     <Link
                       to={`/product/${generateNameId({
-                        name: item.infoProduct.title,
-                        id: item.product_id,
+                        name: item?.infoProduct?.title,
+                        id: item?.product_id,
                       })}`}
                       className="flex justify-between gap-3"
                     >
                       <img
-                        src={item.infoProduct.images[0]}
+                        src={item?.infoProduct?.images[0]}
                         className="object-cover w-20 h-20 rounded-md"
                         alt=""
                       />
                       <div className="flex flex-col justify-between">
                         <span className="line-clamp-2">
-                          {item.infoProduct.title}
+                          {item?.infoProduct?.title}
                         </span>
                         {item.childTitle !== "none" && (
                           <span>{item?.childTitle || ""}</span>
                         )}
                         <div className="flex items-center gap-1">
-                          <span>{item.quantity} </span>
+                          <span>{item?.quantity} </span>
                           <span>x</span>
                           <span className="text-[#2DA5F3]">
                             {formatCurrency(
                               item?.infoProduct?.productChild?.priceNew ||
-                                item.infoProduct.price *
-                                  (1 - item.infoProduct.discountPercent / 100)
+                                item?.infoProduct?.price *
+                                  (1 - item?.infoProduct?.discountPercent / 100)
                             )}{" "}
                             VND
                           </span>
@@ -132,7 +132,7 @@ const MiddleNav = () => {
                     </Link>
                     <div
                       onClick={() =>
-                        handleDeleteCart(item.product_id, item.childTitle)
+                        handleDeleteCart(item?.product_id, item?.childTitle)
                       }
                       className="cursor-pointer"
                     >
@@ -174,21 +174,21 @@ const MiddleNav = () => {
                   <div className="flex justify-between gap-4" key={index}>
                     <Link
                       to={`/product/${generateNameId({
-                        name: item.title,
-                        id: item._id,
+                        name: item?.title,
+                        id: item?._id,
                       })}`}
                       className="flex justify-between gap-3"
                     >
                       <img
-                        src={item.images[0]}
+                        src={item?.images[0]}
                         className="object-cover w-20 h-20 rounded-md"
                         alt=""
                       />
                       <div className="flex flex-col justify-between">
-                        <span className="line-clamp-2">{item.title}</span>
+                        <span className="line-clamp-2">{item?.title}</span>
                         <div className="flex items-center gap-1">
                           <span className="text-[#2DA5F3]">
-                            {formatCurrency(item.minPrice)} VND
+                            {formatCurrency(item?.minPrice)} VND
                           </span>
                         </div>
                       </div>

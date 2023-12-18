@@ -17,8 +17,11 @@ import {
 import { doGetWishListAction } from "../../../redux/product/productSlice";
 import { useDispatch } from "react-redux";
 import { callAddToCart, callGetCart } from "../../../services/cartApi";
-import { doGetCartListItemAction } from "../../../redux/cart/cartSlice";
-import { useLocation } from "react-router-dom";
+import {
+  doBuyNowAction,
+  doGetCartListItemAction,
+} from "../../../redux/cart/cartSlice";
+import { useLocation, useNavigate } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { data } from "autoprefixer";
 
@@ -109,6 +112,23 @@ const ModalViewDetail = ({
         dispatch(doGetCartListItemAction(res2.data.cart.products));
       }
       message.success("Thêm vào giỏ hàng thành công");
+    }
+  };
+  const nav = useNavigate();
+  const buyNow = async (id, title, number) => {
+    const data = {
+      id,
+      childTitle: title,
+      quantity: number,
+    };
+    const res = await callAddToCart(data);
+    if (res.data.code === 200) {
+      const res2 = await callGetCart();
+      if (res2.status === 200) {
+        dispatch(doGetCartListItemAction(res2.data.cart.products));
+      }
+      nav("/shoppingcart");
+      dispatch(doBuyNowAction(id));
     }
   };
   return (
@@ -363,6 +383,13 @@ const ModalViewDetail = ({
                   </div>
                 </button>
                 <button
+                  onClick={() =>
+                    buyNow(
+                      dataDetail._id,
+                      selectProduct?.childTitle || "none",
+                      buyCount
+                    )
+                  }
                   //   onClick={buyNow}
                   className=" flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-primary px-5 capitalize text-white shadow-sm outline-none hover:bg-primary/90"
                 >
