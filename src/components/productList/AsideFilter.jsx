@@ -91,7 +91,7 @@ const AsideFilter = ({ setFilterAside, cate, setCurrent }) => {
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <span>
-          <FilterTwoTone /> Bộ lọc tìm kiếm
+          <FilterTwoTone /> {t("aside filter.Filter Search")}
         </span>
         <ReloadOutlined title="Reset" onClick={() => handleResetForm()} />
       </div>
