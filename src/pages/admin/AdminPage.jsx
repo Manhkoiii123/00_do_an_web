@@ -4,6 +4,7 @@ import { Col, Row } from "antd";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 const AdminPage = () => {
+  const token = localStorage.getItem("token");
   let location = useLocation();
   const pathname = location.pathname;
   const a = pathname.split("/");
@@ -34,7 +35,7 @@ const AdminPage = () => {
       label: "Orders",
     },
     {
-      path: "http://localhost:3000/api/v1/admin/chat",
+      path: `http://localhost:3000/api/v1/admin/chat?token=${token}`,
       label: "Chat",
     },
     {

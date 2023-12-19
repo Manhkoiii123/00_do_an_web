@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { doGetCategoryParent } from "../../redux/product/productSlice";
 import { Link } from "react-router-dom";
 const Home = () => {
+  const token = localStorage.getItem("token");
   const dispatch = useDispatch();
   const [productsBestSellers, setProductsBestSellers] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -48,11 +49,16 @@ const Home = () => {
         productBestRate={productBestRate}
         productsBestSellers={productsBestSellers}
       />
-      <div className="fixed bottom-[20px] right-[20px] w-10 h-10 border border-gray-200 flex items-center justify-center text-primary rounded-full cursor-pointer">
-        <Link to={"http://localhost:3000/api/v1/chat"} target="_blank">
-          <WechatOutlined />
-        </Link>
-      </div>
+      {token && (
+        <div className="fixed bottom-[20px] right-[20px] w-10 h-10 border border-gray-200 flex items-center justify-center text-primary rounded-full cursor-pointer">
+          <Link
+            to={`http://localhost:3000/api/v1/chat?token=${token}`}
+            target="_blank"
+          >
+            <WechatOutlined />
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

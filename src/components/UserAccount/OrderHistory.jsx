@@ -5,7 +5,8 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { callOrderHistory, callUpdateOrder } from "../../services/cartApi";
 import moment from "moment";
-import ReactJson from "react-json-view";
+import JsonView from "react18-json-view";
+import "react18-json-view/src/style.css";
 import { callAdminOrder } from "../../services/adminApi";
 import { useSelector } from "react-redux";
 const OrderHistory = () => {
@@ -91,15 +92,7 @@ const OrderHistory = () => {
           (item) => item?.inforProduct?.title
         );
         return (
-          <ReactJson
-            displayObjectSize={false}
-            enableClipboard={false}
-            displayDataTypes={false}
-            quotesOnKeys={false}
-            src={product}
-            collapsed={true}
-            name="Tóm tắt "
-          />
+          <JsonView enableClipboard={false} collapsed={false} src={product} />
         );
       },
     },
@@ -108,14 +101,10 @@ const OrderHistory = () => {
       width: "30%",
       render: (text, record, index) => {
         return (
-          <ReactJson
+          <JsonView
             enableClipboard={false}
-            displayObjectSize={false}
-            displayDataTypes={false}
-            quotesOnKeys={false}
+            collapsed={false}
             src={record.userInfo}
-            collapsed={true}
-            name="Người mua"
           />
         );
       },

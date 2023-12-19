@@ -12,7 +12,7 @@ import {
   callAllCategory,
 } from "../../../services/adminApi";
 import ModalUpdateCate from "./ModalUpdateCate";
-import ReactJson from "react-json-view";
+
 import moment from "moment";
 
 const CategoriesPage = () => {
