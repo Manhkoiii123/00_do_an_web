@@ -36,7 +36,7 @@ const AdminPage = () => {
       label: "Orders",
     },
     {
-      path: `http://localhost:3000/api/v1/admin/chat?token=${token}`,
+      path: `https://do-an-web.onrender.com/api/v1/admin/chat?token=${token}`,
       label: "Chat",
     },
     {
