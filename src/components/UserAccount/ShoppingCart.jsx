@@ -29,6 +29,7 @@ const ShoppingCart = () => {
       childTitle: title,
       quantity: value,
     };
+    console.log(data);
     if (enable) {
       await callUpdateCart(data);
       dispatch(doUpdateQuantityAction({ id, title, value }));
@@ -136,6 +137,7 @@ const ShoppingCart = () => {
                 {cart.length > 0 && (
                   <div className="p-5 my-3 bg-white rounded-sm shadow-sm">
                     {cart?.map((purchase, index) => {
+                      console.log(purchase);
                       return (
                         <div
                           key={`${purchase.product_id}-${index}`}
@@ -221,9 +223,7 @@ const ShoppingCart = () => {
                                 <QuantityController
                                   max={
                                     purchase?.infoProduct?.productChild
-                                      ?.quantity -
-                                      purchase?.infoProduct?.productChild
-                                        ?.stock || purchase.infoProduct.stock
+                                      ?.stock || purchase.infoProduct.stock
                                   }
                                   value={purchase.quantity}
                                   classNameWrapper="flex items-center"
@@ -234,10 +234,7 @@ const ShoppingCart = () => {
                                       value,
                                       value <=
                                         purchase?.infoProduct?.productChild
-                                          ?.quantity -
-                                          purchase?.infoProduct?.productChild
-                                            ?.stock ||
-                                        purchase.infoProduct.stock
+                                          ?.stock || purchase.infoProduct.stock
                                     )
                                   }
                                   onDecrease={(value) =>
@@ -256,10 +253,7 @@ const ShoppingCart = () => {
                                       value,
                                       value <=
                                         purchase?.infoProduct?.productChild
-                                          ?.quantity -
-                                          purchase?.infoProduct?.productChild
-                                            ?.stock ||
-                                        purchase.infoProduct.stock
+                                          ?.stock || purchase.infoProduct.stock
                                     )
                                   }
                                 ></QuantityController>
