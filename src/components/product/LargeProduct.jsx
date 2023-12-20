@@ -11,6 +11,7 @@ import ProductRating from "./ProductRating";
 import { message } from "antd";
 import { GoGitCompare } from "react-icons/go";
 import { Link } from "react-router-dom";
+import DOMPurify from "dompurify";
 
 const LargeProduct = ({ product }) => {
   const token = useSelector((state) => state.account.token);
@@ -86,7 +87,14 @@ const LargeProduct = ({ product }) => {
             {formatCurrency(product.minPrice)} VND
           </span>
         </div>
-        <span className="line-clamp-3">{product.description}</span>
+        <span className="mx-4 mt-6 mb-4 text-sm leading-loose line-clamp-3">
+          <div
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(product.description),
+            }}
+          ></div>
+        </span>
+        {/* <span className="line-clamp-3">{product.description}</span> */}
         <div className="flex justify-center gap-2 pt-4">
           <div
             onClick={() => handleAddToWishList(product._id)}
