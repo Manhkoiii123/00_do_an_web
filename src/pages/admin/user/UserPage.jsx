@@ -9,6 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import ModalUserDetail from "./ModalUserDetail";
 import UpdateUser from "./UpdateUser";
+import { Helmet } from "react-helmet";
 
 const UserPage = () => {
   const [dataDetail, setDataDetail] = useState({});
@@ -140,6 +141,11 @@ const UserPage = () => {
   ];
   return (
     <div className="p-4 border border-gray-200 rounded-lg">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Quản lí người dùng</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <div className="flex items-center justify-between mb-10">
         <span className="uppercase">User</span>
       </div>

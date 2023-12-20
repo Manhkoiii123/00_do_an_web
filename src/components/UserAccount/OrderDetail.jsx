@@ -21,6 +21,7 @@ import {
 } from "../../services/cartApi";
 import moment from "moment";
 import { formatCurrency, formatNumberToSocialStyle } from "../../utils/utils";
+import { Helmet } from "react-helmet";
 
 const OrderDetail = () => {
   const [showModalRating, setShowModalRating] = useState(false);
@@ -190,6 +191,11 @@ const OrderDetail = () => {
   if (!id) return null;
   return (
     <>
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Chi tiết đơn hàng</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <div
         className={`container p-4 border border-gray-100 ${
           isAdmin ? "my-0" : "my-12"

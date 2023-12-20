@@ -26,7 +26,7 @@ import {
   doGetCartListItemAction,
 } from "../../redux/cart/cartSlice";
 import Product from "./Product";
-
+import { Helmet } from "react-helmet";
 const ProductDetail = () => {
   const { id } = useParams();
   const [selectIndex, setSelectIndex] = useState(0);
@@ -164,6 +164,11 @@ const ProductDetail = () => {
   }, []);
   return (
     <div className="py-6 bg-gray-200">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>{dataProduct?.title}</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <div className="container">
         <div className="p-4 bg-white shadow">
           <div className="grid grid-cols-12 gap-9">

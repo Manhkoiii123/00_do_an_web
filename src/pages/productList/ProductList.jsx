@@ -5,10 +5,11 @@ import AllProduct from "../../components/productList/AllProduct";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { callGetHomeProduct } from "../../services/productApi";
+import { Helmet } from "react-helmet";
 
 const ProductList = () => {
   //id category
-  
+
   const params = useParams();
   const id = params.id;
   const [categories, setCategories] = useState([]);
@@ -50,6 +51,11 @@ const ProductList = () => {
 
   return (
     <div className="container my-8">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Tìm kiếm sản phẩm</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <Row gutter={[20, 20]}>
         <Col span={5}>
           <AsideFilter

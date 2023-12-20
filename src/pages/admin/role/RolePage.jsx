@@ -7,6 +7,7 @@ import ModalAddRole from "./ModalAddRole";
 import { EditFilled, EyeFilled } from "@ant-design/icons";
 import DetailRole from "./DetailRole";
 import ModalUpdate from "./ModalUpdate";
+import { Helmet } from "react-helmet";
 
 const RolePage = () => {
   const [listRole, setListRole] = useState([]);
@@ -109,6 +110,11 @@ const RolePage = () => {
   ];
   return (
     <div className="p-4 border border-gray-200 rounded-lg">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Quản lí phân quyền</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <div className="flex items-center justify-between mb-10">
         <span className="uppercase">Roles</span>
         <Button onClick={() => setOpenAddRole(true)}>Add New Role</Button>

@@ -9,6 +9,7 @@ import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
 import { callAdminOrder } from "../../services/adminApi";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet";
 const OrderHistory = () => {
   const token = useSelector((state) => state.account.token);
   const [orderHistory, setOrderHistory] = useState([]);
@@ -212,6 +213,10 @@ const OrderHistory = () => {
         isAdmin ? "my-0" : "my-12"
       }`}
     >
+      <Helmet>
+        <title>Lịch sử mua hàng</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <span className="text-sm font-medium text-gray-900 uppercase ">
         Order history
       </span>

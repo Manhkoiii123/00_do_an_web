@@ -7,6 +7,7 @@ import { formatCurrency, generateNameId } from "../../utils/utils";
 import { callDeleteWishlist, callGetWishlist } from "../../services/productApi";
 import { doGetWishListAction } from "../../redux/product/productSlice";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const WishList = () => {
   const dispatch = useDispatch();
@@ -111,6 +112,11 @@ const WishList = () => {
   ];
   return (
     <div className="container my-12 border border-gray-300">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Yêu thích</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <div className="p-4">
         <span className="my-4 text-lg font-medium leading-6 text-gray-900">
           Wishlist

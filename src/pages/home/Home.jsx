@@ -11,6 +11,7 @@ import { callGetHomeProduct } from "../../services/productApi";
 import { useDispatch } from "react-redux";
 import { doGetCategoryParent } from "../../redux/product/productSlice";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 const Home = () => {
   const token = localStorage.getItem("token");
   const dispatch = useDispatch();
@@ -34,6 +35,11 @@ const Home = () => {
   }, []);
   return (
     <div className="container relative py-4">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Home Page</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <Widget />
       <BestDeals productsBestSellers={productsBestSellers} />
       <Category categories={categories} />

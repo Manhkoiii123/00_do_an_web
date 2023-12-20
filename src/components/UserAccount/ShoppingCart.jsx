@@ -17,6 +17,7 @@ import {
 } from "../../services/cartApi";
 import { useEffect, useMemo, useState } from "react";
 import noproduct from "../../assets/images/no-product.png";
+import { Helmet } from "react-helmet";
 
 const ShoppingCart = () => {
   const cart = useSelector((state) => state.cart.cart);
@@ -98,6 +99,11 @@ const ShoppingCart = () => {
 
   return (
     <div className="py-16 bg-neutral-100">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Giỏ hàng</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <div className="container">
         {cart && cart.length > 0 && (
           <Row gutter={[20, 20]}>

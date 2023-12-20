@@ -10,6 +10,7 @@ import {
   callGetAllProductAdmin,
 } from "../../../services/adminApi";
 import ModalUpdateProduct from "./ModalUpdateProduct";
+import { Helmet } from "react-helmet";
 
 const ProductPage = () => {
   const [listProduct, setListProduct] = useState([]);
@@ -134,6 +135,11 @@ const ProductPage = () => {
 
   return (
     <div className="p-4 border border-gray-200 rounded-lg">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Quản lí sản phẩm</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <div className="flex items-center justify-between mb-10">
         <span className="uppercase">Products</span>
         <Button onClick={() => setIsOpenAddNewProduct(true)}>

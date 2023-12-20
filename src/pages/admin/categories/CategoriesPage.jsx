@@ -14,6 +14,7 @@ import {
 import ModalUpdateCate from "./ModalUpdateCate";
 
 import moment from "moment";
+import { Helmet } from "react-helmet";
 
 const CategoriesPage = () => {
   const [searchText, setSearchText] = useState("");
@@ -224,6 +225,11 @@ const CategoriesPage = () => {
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
   return (
     <>
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Quản lí danh mục sản phẩm</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <div className="p-4 border border-gray-200 rounded-lg">
         <div className="flex items-center justify-between mb-10">
           <span className="uppercase">categories</span>

@@ -8,6 +8,7 @@ import { formatCurrency } from "../../utils/utils";
 import { callCheckOutSuccess, callCheckout } from "../../services/cartApi";
 import Paypal from "../paypal/Paypal";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const CheckOut = () => {
   const [dataShipping, setDataShipping] = useState({});
@@ -149,6 +150,11 @@ const CheckOut = () => {
   };
   return (
     <div className="container my-12">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Thanh toán</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <Row gutter={[30, 30]}>
         <Col span={16}>
           <div

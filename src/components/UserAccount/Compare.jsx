@@ -15,6 +15,7 @@ import {
   doGetWishListAction,
 } from "../../redux/product/productSlice";
 import { message } from "antd";
+import { Helmet } from "react-helmet";
 
 const Compare = () => {
   const compareProduct = useSelector((state) => state.product.compareProduct);
@@ -60,6 +61,11 @@ const Compare = () => {
   }, [compareProduct]);
   return (
     <div className="container py-12">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>So sánh</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <div className="grid grid-cols-4 ">
         <div className="col-span-1 border border-gray-200">
           <div className=" h-[349px]"></div>

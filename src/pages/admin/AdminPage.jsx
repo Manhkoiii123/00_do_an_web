@@ -2,6 +2,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { Col, Row } from "antd";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const AdminPage = () => {
   const token = localStorage.getItem("token");
@@ -45,6 +46,11 @@ const AdminPage = () => {
   ];
   return (
     <>
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Trang quản trị</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <Header />
       <div className="container my-12">
         <Row gutter={[30, 30]}>

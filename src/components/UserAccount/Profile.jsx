@@ -25,6 +25,7 @@ import {
 } from "../../services/authApi";
 import InputFile from "../input/InputFile";
 import { doUpdateUserInfo } from "../../redux/account/accountSlice";
+import { Helmet } from "react-helmet";
 
 const Profile = () => {
   const profile = useSelector((state) => state.account.profile);
@@ -224,6 +225,11 @@ const Profile = () => {
   ];
   return (
     <div className="container p-10 my-12 border border-gray-100">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Thông tin người dùng</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <span>Profile</span>
       <Tabs defaultActiveKey="1" items={items} />
     </div>
