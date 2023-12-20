@@ -20,7 +20,7 @@ const Category = ({ categories }) => {
   }, [categories]);
   return (
     <>
-      <div className="mb-8 text-center">
+      <div className="my-8 text-center">
         <span className="font-semibold text-[32px] leading-10 text-gray-900">
           Shop with Categories
         </span>

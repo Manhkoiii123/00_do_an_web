@@ -105,7 +105,7 @@ const CreateCategory = ({
     setNewProperty("");
   };
   const handleDelete = (value) => {
-    const a = properties.filter((item) => item.value !== value);
+    const a = properties.filter((item) => item !== value);
     setProperties(a);
   };
   const [newParentId, setNewParentId] = useState("");
@@ -123,7 +123,10 @@ const CreateCategory = ({
       title="Add new category"
       open={openCreateCategory}
       onOk={() => setOpenCreateCategory(true)}
-      onCancel={() => setOpenCreateCategory(false)}
+      onCancel={() => {
+        setOpenCreateCategory(false);
+        setProperties([])
+      }}
       footer={<></>}
       maskClosable={false}
     >
@@ -205,7 +208,7 @@ const CreateCategory = ({
                   flexDirection: "column",
                   gap: "10px",
                 }}
-                // onChange={onChangeCheckbox}
+              // onChange={onChangeCheckbox}
               >
                 <Row>
                   {properties?.map((item, index) => (

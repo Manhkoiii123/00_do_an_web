@@ -69,23 +69,23 @@ const OrderDetail = () => {
       setCancelOrder(true);
     }
   }, [dataDetail?.statusOrder]);
-  const changeStatus = async () => {
-    setCurrentStep((prev) => prev + 1);
-    const data = {
-      statusOrder: currentStep,
-    };
-    const res = await callUpdateOrder(id, data);
-  };
-  useEffect(() => {
-    const id = setTimeout(() => {
-      if (currentStep <= 3) {
-        changeStatus();
-      }
-    }, 10000);
-    return () => {
-      clearTimeout(id);
-    };
-  }, [currentStep]);
+  // const changeStatus = async () => {
+  //   setCurrentStep((prev) => prev + 1);
+  //   const data = {
+  //     statusOrder: currentStep,
+  //   };
+  //   const res = await callUpdateOrder(id, data);
+  // };
+  // useEffect(() => {
+  //   const id = setTimeout(() => {
+  //     if (currentStep <= 3) {
+  //       changeStatus();
+  //     }
+  //   }, 10000);
+  //   return () => {
+  //     clearTimeout(id);
+  //   };
+  // }, [currentStep]);
 
   const dataSource = dataDetail?.products;
   const columns = [
@@ -197,9 +197,8 @@ const OrderDetail = () => {
         <meta name="description" content="chi tiết sản phẩm" />
       </Helmet>
       <div
-        className={`container p-4 border border-gray-100 ${
-          isAdmin ? "my-0" : "my-12"
-        }`}
+        className={`container p-4 border border-gray-100 ${isAdmin ? "my-0" : "my-12"
+          }`}
       >
         <div className="flex items-center justify-between ">
           <Link to={to} className="flex items-center gap-2 ">

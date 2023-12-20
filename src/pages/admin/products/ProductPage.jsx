@@ -98,6 +98,7 @@ const ProductPage = () => {
     {
       title: "Action",
       render: (text, record, index) => {
+        console.log(record)
         return (
           <div style={{ display: "flex", gap: "5px" }}>
             <Popconfirm

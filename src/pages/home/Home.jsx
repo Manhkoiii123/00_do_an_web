@@ -36,13 +36,15 @@ const Home = () => {
   return (
     <div className="container relative py-4">
       <Helmet>
-        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+
         <title>Home Page</title>
         <meta name="description" content="chi tiết sản phẩm" />
       </Helmet>
       <Widget />
       <BestDeals productsBestSellers={productsBestSellers} />
-      <Category categories={categories} />
+      <div className="py-8">
+        <Category categories={categories} />
+      </div>
       <FeaturedProducts productFeatureds={productFeatureds} />
       <div className="flex gap-2 py-4 contaier">
         <img src="Banner.png" className="w-1/2" alt="" />
