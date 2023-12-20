@@ -7,6 +7,7 @@ import Button from "../../components/Button";
 import { useForm } from "antd/es/form/Form";
 import { callRegister } from "../../services/authApi";
 import { useState } from "react";
+import { Helmet } from "react-helmet";
 
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +35,11 @@ const Register = () => {
 
   return (
     <div className="register-page">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Đăng Kí</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <main className="main">
         <div className="container">
           <section className="wrapper">

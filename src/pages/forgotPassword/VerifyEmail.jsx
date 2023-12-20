@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { callOtp } from "../../services/authApi";
+import { Helmet } from "react-helmet";
 
 const VerifyEmail = () => {
   const [form] = useForm();
@@ -31,6 +32,11 @@ const VerifyEmail = () => {
   };
   return (
     <div className="register-page">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Xác thực email</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <main className="main">
         <div className="container">
           <section className="wrapper">

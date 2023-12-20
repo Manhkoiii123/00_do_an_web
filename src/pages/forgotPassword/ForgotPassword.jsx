@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { callForgotPasswordEmail } from "../../services/authApi";
+import { Helmet } from "react-helmet";
 
 const ForgotPassword = () => {
   const [form] = useForm();
@@ -27,6 +28,11 @@ const ForgotPassword = () => {
   };
   return (
     <div className="register-page">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Quên mật khẩu</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <main className="main">
         <div className="container">
           <section className="wrapper">

@@ -8,6 +8,7 @@ import Button from "../../components/Button";
 import { callLogin } from "../../services/authApi";
 import { useDispatch } from "react-redux";
 import { doGetUserInfo, doLoginAction } from "../../redux/account/accountSlice";
+import { Helmet } from "react-helmet";
 const Login = () => {
   const [form] = useForm();
   const nav = useNavigate();
@@ -37,6 +38,11 @@ const Login = () => {
   };
   return (
     <div className="register-page">
+      <Helmet>
+        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
+        <title>Đăng nhập</title>
+        <meta name="description" content="chi tiết sản phẩm" />
+      </Helmet>
       <main className="main">
         <div className="container">
           <section className="wrapper">
