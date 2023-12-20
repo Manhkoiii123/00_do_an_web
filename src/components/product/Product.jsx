@@ -53,77 +53,78 @@ const Product = ({ star, product }) => {
   };
   const [openModalView, setOpenModalView] = useState(false);
   return (
-    <Link
-      to={`/product/${generateNameId({
-        name: product.title,
-        id: product._id,
-      })}`}
-    >
-      <div className="w-full h-full text-base border border-gray-200 cursor-pointer hover:shadow-xl">
-        <div
-          onMouseEnter={(e) => {
-            e.stopPropagation();
-            setIsShowOption(true);
-          }}
-          onMouseLeave={(e) => {
-            e.stopPropagation();
-            setIsShowOption(false);
-          }}
-          className="flex flex-col p-[10px] items-center justify-center w-full "
-        >
-          <div className="relative w-full">
-            {isShowOption && (
-              <div className="absolute left-0 right-0 flex justify-center gap-2 bottom-[-10px] animate-slide-top">
-                <SelectOption
-                  onClick={() => setOpenModalView(true)}
-                  icons={<EyeFilled />}
-                />
-                <SelectOption
-                  onClick={() => handleAddToWishList(product._id)}
-                  icons={<BsFillSuitHeartFill />}
-                />
-                <SelectOption
-                  onClick={() => handleAddToCompare(product._id, token)}
-                  icons={<GoGitCompare />}
-                />
-              </div>
-            )}
-            <img
-              src={
-                product?.images[0] ||
-                "https://tse2.mm.bing.net/th?id=OIP.o27PVWSehFHkhiMMkUR8ZAHaE7&pid=Api&P=0&h=220"
-              }
-              alt=""
-              // w-[180px]
-              className="object-cover w-full h-[140px]"
-            />
-          </div>
-          <div
-            className={`flex flex-col mt-[15px] items-start w-full  ${
-              star ? "gap-4" : "gap-2"
-            }`}
-          >
-            <span className="line-clamp-2">{product?.title}</span>
-            {star && (
-              <div className="flex justify-start">
-                <ProductRating rating={product.rate}></ProductRating>
-                <span className="text-sm font-normal text-gray-500">
-                  ({product.buyed || 0})
-                </span>
-              </div>
-            )}
-            <span className="text-sm font-semibold text-[#2DA5F3]">
-              {formatCurrency(product.minPrice)} VND
-            </span>
-          </div>
+    <div className="w-full h-full text-base border border-gray-200 cursor-pointer hover:shadow-xl">
+      <div
+        onMouseEnter={(e) => {
+          e.stopPropagation();
+          setIsShowOption(true);
+        }}
+        onMouseLeave={(e) => {
+          e.stopPropagation();
+          setIsShowOption(false);
+        }}
+        className="flex flex-col p-[10px] items-center justify-center w-full "
+      >
+        <div className="relative w-full">
+          {isShowOption && (
+            <div className="absolute left-0 right-0 flex justify-center gap-2 bottom-[-10px] animate-slide-top">
+              <SelectOption
+                onClick={() => setOpenModalView(true)}
+                icons={<EyeFilled />}
+              />
+              <SelectOption
+                onClick={() => handleAddToWishList(product._id)}
+                icons={<BsFillSuitHeartFill />}
+              />
+              <SelectOption
+                onClick={() => handleAddToCompare(product._id, token)}
+                icons={<GoGitCompare />}
+              />
+            </div>
+          )}
+          <img
+            src={
+              product?.images[0] ||
+              "https://tse2.mm.bing.net/th?id=OIP.o27PVWSehFHkhiMMkUR8ZAHaE7&pid=Api&P=0&h=220"
+            }
+            alt=""
+            // w-[180px]
+            className="object-cover w-full h-[140px]"
+          />
         </div>
-        <ModalViewDetail
-          dataDetail={product}
-          isOpenDetail={openModalView}
-          setIsOpenDetail={setOpenModalView}
-        ></ModalViewDetail>
+        <div
+          className={`flex flex-col mt-[15px] items-start w-full  ${
+            star ? "gap-4" : "gap-2"
+          }`}
+        >
+          <Link
+            to={`/product/${generateNameId({
+              name: product.title,
+              id: product._id,
+            })}`}
+            className="line-clamp-2"
+          >
+            {product?.title}
+          </Link>
+          {star && (
+            <div className="flex justify-start">
+              <ProductRating rating={product.rate}></ProductRating>
+              <span className="text-sm font-normal text-gray-500">
+                ({product.buyed || 0})
+              </span>
+            </div>
+          )}
+          <span className="text-sm font-semibold text-[#2DA5F3]">
+            {formatCurrency(product.minPrice)} VND
+          </span>
+        </div>
       </div>
-    </Link>
+      <ModalViewDetail
+        dataDetail={product}
+        isOpenDetail={openModalView}
+        setIsOpenDetail={setOpenModalView}
+      ></ModalViewDetail>
+    </div>
   );
 };
 
