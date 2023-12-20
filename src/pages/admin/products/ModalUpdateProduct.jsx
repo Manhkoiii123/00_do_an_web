@@ -19,9 +19,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { v4 as uuidv4 } from "uuid";
 import {
-  callAdminCategoryDetail,
   callAllCategory,
-  callGetAllProductAdmin,
   callUpdataImageProduct,
   callUpdateProduct,
 } from "../../../services/adminApi";
@@ -134,9 +132,9 @@ const ModalUpdateProduct = ({
   };
   const [propertiesCategory, setPropretiesCategory] = useState([]);
   useEffect(() => {
-    const dataProperties = dataDetail?.properties
+    const dataProperties = dataDetail?.properties;
     const tmp = dataProperties?.map((item) => {
-      const keys = Object.keys(item)
+      const keys = Object.keys(item);
       return {
         [keys[0]]: dataProperties[keys[0]],
       };
@@ -264,10 +262,6 @@ const ModalUpdateProduct = ({
       form.resetFields();
       setFileListSlider([]);
       formAddChild.setFieldsValue({ items: [{}] });
-      const res = await callGetAllProductAdmin();
-      if (res.data.listProducts) {
-        setListProduct(res.data.listProducts);
-      }
     }
   };
 
