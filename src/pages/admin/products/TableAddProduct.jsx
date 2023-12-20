@@ -63,7 +63,7 @@ const TableAddProduct = ({
             })}
             <div className="col-span-1 px-6 py-3 ">Giá</div>
             <div className="col-span-1 px-6 py-3 ">Số lượng</div>
-            <div className="col-span-1 px-6 py-3 ">Đã bán</div>
+            <div className="col-span-1 px-6 py-3 ">Còn lại</div>
           </div>
         </div>
       </div>
