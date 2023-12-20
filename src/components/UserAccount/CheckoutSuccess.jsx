@@ -1,8 +1,23 @@
 import { Button, Result } from "antd";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import { callGetCart } from "../../services/cartApi";
+import { doGetCartListItemAction } from "../../redux/cart/cartSlice";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 const CheckoutSuccess = () => {
+  const dispatch = useDispatch();
+  const fetch = async () => {
+    const res = await callGetCart();
+    // await callGetCart();
+    if (res.data.cart.products) {
+      dispatch(doGetCartListItemAction(res.data.cart.products));
+    }
+  };
+  useEffect(() => {
+    fetch();
+  }, []);
   return (
     <div className="container mx-auto">
       <Helmet>
