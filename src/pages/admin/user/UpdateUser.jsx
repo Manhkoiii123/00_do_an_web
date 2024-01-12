@@ -62,7 +62,7 @@ const UpdateUser = ({
         // console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
-        message.success(` file uploaded successfully`);
+        message.success(`file uploaded successfully`);
       } else if (info.file.status === "error") {
         message.error(` file upload failed.`);
       }

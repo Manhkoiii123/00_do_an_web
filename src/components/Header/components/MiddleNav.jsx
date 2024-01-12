@@ -31,6 +31,7 @@ const MiddleNav = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
   const profile = useSelector((state) => state.account.profile);
+  console.log(profile);
   const role = profile.role?.title;
   const fetch = async () => {
     const res = await callGetCart();

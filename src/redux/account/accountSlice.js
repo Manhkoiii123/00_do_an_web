@@ -24,7 +24,10 @@ export const accountSlice = createSlice({
       state.profile = action.payload;
     },
     doUpdateUserInfo: (state, action) => {
-      state.profile = action.payload;
+      state.profile = {
+        ...action.payload,
+        role: state.profile.role,
+      };
     },
   },
 });
