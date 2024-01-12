@@ -19,7 +19,7 @@ const MiniProduct = ({ product }) => {
         className="w-[80px] h-[80px] object-cover"
       />
       <div className="flex flex-col justify-between p-3">
-        <span className="text-sm font-normal leading-5 text-gray-900">
+        <span className="text-sm font-normal leading-5 text-gray-900 line-clamp-2">
           {product.title}
         </span>
         <span className="text-[#2DA5F3] text-sm font-semibold leading-5">

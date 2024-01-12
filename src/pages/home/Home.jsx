@@ -36,13 +36,14 @@ const Home = () => {
   return (
     <div className="container relative py-4">
       <Helmet>
-        {/* <title>{dataProduct?.title} | Ecommerce</title> */}
         <title>Home Page</title>
         <meta name="description" content="chi tiết sản phẩm" />
       </Helmet>
       <Widget />
       <BestDeals productsBestSellers={productsBestSellers} />
-      <Category categories={categories} />
+      <div className="py-8">
+        <Category categories={categories} />
+      </div>
       <FeaturedProducts productFeatureds={productFeatureds} />
       <div className="flex gap-2 py-4 contaier">
         <img src="Banner.png" className="w-1/2" alt="" />
@@ -58,7 +59,7 @@ const Home = () => {
       {token && (
         <div className="fixed bottom-[20px] right-[20px] w-10 h-10 border border-gray-200 flex items-center justify-center text-primary rounded-full cursor-pointer">
           <Link
-            to={`http://localhost:3000/api/v1/chat?token=${token}`}
+            to={`https://do-an-web.onrender.com/api/v1/chat?token=${token}`}
             target="_blank"
           >
             <WechatOutlined />

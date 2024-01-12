@@ -60,6 +60,7 @@ const Profile = () => {
       address: values.address,
       avatar: avatar,
     };
+    console.log(data);
     const res = await callUpdateUser(data);
     if (res.data.code === 200) {
       localStorage.setItem("profile", JSON.stringify(res.data.user));

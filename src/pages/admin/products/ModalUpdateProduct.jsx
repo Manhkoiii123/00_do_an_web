@@ -19,7 +19,6 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { v4 as uuidv4 } from "uuid";
 import {
-  callAdminCategoryDetail,
   callAllCategory,
   callUpdataImageProduct,
   callUpdateProduct,
@@ -37,7 +36,6 @@ const ModalUpdateProduct = ({
   setOpenModalUpdate,
   fetchProduct,
 }) => {
-  //   console.log(dataDetail);
   const [dataTableChild, setDataTableChild] = useState([]);
   const [previewOpenSlider, setPreviewOpenSlider] = useState(false);
   const [previewImageSlider, setPreviewImageSlider] = useState("");
@@ -134,19 +132,28 @@ const ModalUpdateProduct = ({
   };
   const [propertiesCategory, setPropretiesCategory] = useState([]);
   useEffect(() => {
-    const fetchPropertyCategory = async () => {
-      const res = await callAdminCategoryDetail(categorySelect);
-      if (res.data.code === 200) {
-        const tmp = res.data?.productCategory?.properties?.map((item) => {
-          return {
-            [item]: "",
-          };
-        });
-        setPropretiesCategory(tmp);
-      }
-    };
-    fetchPropertyCategory();
-  }, [categorySelect]);
+    const dataProperties = dataDetail?.properties;
+    const tmp = dataProperties?.map((item) => {
+      const keys = Object.keys(item);
+      return {
+        [keys[0]]: dataProperties[keys[0]],
+      };
+    });
+
+    setPropretiesCategory(tmp);
+    // const fetchPropertyCategory = async () => {
+    //   const res = await callAdminCategoryDetail(categorySelect);
+    //   if (res.data.code === 200) {
+    // const tmp = res.data?.productCategory?.properties?.map((item) => {
+    //   return {
+    //     [item]: "",
+    //   };
+    //     });
+    //     setPropretiesCategory(tmp);
+    //   }
+    // };
+    // fetchPropertyCategory();
+  }, [dataDetail?.properties]);
   //change status
   const [valueStatus, setValueStatus] = useState("");
   const onChangeStatus = (e) => {
@@ -227,9 +234,9 @@ const ModalUpdateProduct = ({
     });
 
     const data = {
-      title: values.title,
-      productCategoryId: categorySelect,
-      description: valueQuill,
+      title: values.title || dataDetail?._id,
+      productCategoryId: categorySelect || dataDetail?.productCategoryId,
+      description: valueQuill || dataDetail?.description,
       images: images,
       discountPercent: values.discountPercent,
       group: [...newArr, ...dataTableChild],
@@ -242,7 +249,6 @@ const ModalUpdateProduct = ({
         };
       }),
     };
-    // console.log(data);
     const res = await callUpdateProduct(dataDetail?._id, data);
 
     if (res.data.newProduct) {
@@ -350,7 +356,7 @@ const ModalUpdateProduct = ({
           />
         </Form.Item>
 
-        {propertiesCategory.length > 0 &&
+        {propertiesCategory?.length > 0 &&
           propertiesCategory.map((item, index) => {
             const key = Object.keys(item);
             return (
